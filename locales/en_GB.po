@@ -1,0 +1,234 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Appointment Manager 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-23 00:00+0000\n"
+"PO-Revision-Date: 2026-05-23 00:00+0000\n"
+"Last-Translator: DSI\n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Appointment Manager"
+msgstr "Appointment Manager"
+
+msgid "Appointments"
+msgstr "Appointments"
+
+msgid "Appointment"
+msgstr "Appointment"
+
+msgid "New appointment"
+msgstr "New appointment"
+
+msgid "Appointment Calendar"
+msgstr "Appointment Calendar"
+
+msgid "Appointment type"
+msgstr "Appointment type"
+
+msgid "Appointment Types"
+msgstr "Appointment Types"
+
+msgid "Appointment Type"
+msgstr "Appointment Type"
+
+msgid "Propose appointment"
+msgstr "Propose appointment"
+
+msgid "A new appointment has been proposed for this ticket."
+msgstr "A new appointment has been proposed for this ticket."
+
+msgid "Confirm"
+msgstr "Confirm"
+
+msgid "Decline"
+msgstr "Decline"
+
+msgid "Request reschedule"
+msgstr "Request reschedule"
+
+msgid "Your response has been recorded."
+msgstr "Your response has been recorded."
+
+msgid "Proposed"
+msgstr "Proposed"
+
+msgid "Confirmed"
+msgstr "Confirmed"
+
+msgid "Declined"
+msgstr "Declined"
+
+msgid "Reschedule requested"
+msgstr "Reschedule requested"
+
+msgid "Cancelled"
+msgstr "Cancelled"
+
+msgid "Completed"
+msgstr "Completed"
+
+msgid "Cancel appointment"
+msgstr "Cancel appointment"
+
+msgid "Mark completed"
+msgstr "Mark completed"
+
+msgid "Manage appointments"
+msgstr "Manage appointments"
+
+msgid "Manage appointment types"
+msgstr "Manage appointment types"
+
+msgid "Manage own availability"
+msgstr "Manage own availability"
+
+msgid "Appointment Manager plugin"
+msgstr "Appointment Manager plugin"
+
+msgid "Technician Weekly Availability"
+msgstr "Technician Weekly Availability"
+
+msgid "Blocked Periods"
+msgstr "Blocked Periods"
+
+msgid "Blocked Period"
+msgstr "Blocked Period"
+
+msgid "Add blocked period"
+msgstr "Add blocked period"
+
+msgid "Add type"
+msgstr "Add type"
+
+msgid "Add appointment type"
+msgstr "Add appointment type"
+
+msgid "Edit appointment type"
+msgstr "Edit appointment type"
+
+msgid "Built-in"
+msgstr "Built-in"
+
+msgid "Built-in appointment types cannot be deleted."
+msgstr "Built-in appointment types cannot be deleted."
+
+msgid "Appointment type added."
+msgstr "Appointment type added."
+
+msgid "Appointment type updated."
+msgstr "Appointment type updated."
+
+msgid "Appointment type deactivated."
+msgstr "Appointment type deactivated."
+
+msgid "Availability saved."
+msgstr "Availability saved."
+
+msgid "Blocked period added."
+msgstr "Blocked period added."
+
+msgid "Blocked period removed."
+msgstr "Blocked period removed."
+
+msgid "Invalid date range for blocked period."
+msgstr "Invalid date range for blocked period."
+
+msgid "All technicians"
+msgstr "All technicians"
+
+msgid "Tabler icon class"
+msgstr "Tabler icon class"
+
+msgid "Appointment proposed. A follow-up has been posted on the ticket."
+msgstr "Appointment proposed. A follow-up has been posted on the ticket."
+
+msgid "Invalid ticket."
+msgstr "Invalid ticket."
+
+msgid "Ticket not found."
+msgstr "Ticket not found."
+
+msgid "Invalid date format."
+msgstr "Invalid date format."
+
+msgid "End date must be after start date."
+msgstr "End date must be after start date."
+
+msgid "Appointment cannot be set in the past."
+msgstr "Appointment cannot be set in the past."
+
+msgid "Invalid or missing appointment token."
+msgstr "Invalid or missing appointment token."
+
+msgid "Appointment not found. It may have already been actioned or cancelled."
+msgstr "Appointment not found. It may have already been actioned or cancelled."
+
+msgid "You are not allowed to act on this appointment."
+msgstr "You are not allowed to act on this appointment."
+
+msgid "Back to ticket"
+msgstr "Back to ticket"
+
+msgid "Could not process the action. Please contact support."
+msgstr "Could not process the action. Please contact support."
+
+msgid "All appointments for this ticket"
+msgstr "All appointments for this ticket"
+
+msgid "Select a type\xe2\x80\xa6"
+msgstr "Select a type\xe2\x80\xa6"
+
+msgid "Office, building, or remote"
+msgstr "Office, building, or remote"
+
+msgid "You do not have permission to create appointments."
+msgstr "You do not have permission to create appointments."
+
+msgid "Cancel this appointment?"
+msgstr "Cancel this appointment?"
+
+msgid "Appointment cancelled."
+msgstr "Appointment cancelled."
+
+msgid "Appointment marked as completed."
+msgstr "Appointment marked as completed."
+
+msgid "No blocked periods defined."
+msgstr "No blocked periods defined."
+
+msgid "Appointment status updated to <strong>%s</strong> by %s."
+msgstr "Appointment status updated to <strong>%s</strong> by %s."
+
+msgid "Please create a new appointment for this ticket."
+msgstr "Please create a new appointment for this ticket."
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Start"
+msgstr "Start"
+
+msgid "End"
+msgstr "End"
+
+msgid "Location"
+msgstr "Location"
+
+msgid "Unavailable"
+msgstr "Unavailable"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "Calendar"
+msgstr "Calendar"
+
+msgid "This appointment has already been actioned. Current status: <strong>%s</strong>."
+msgstr "This appointment has already been actioned. Current status: <strong>%s</strong>."
+
+msgid "Remove this blocked period?"
+msgstr "Remove this blocked period?"
