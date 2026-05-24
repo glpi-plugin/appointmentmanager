@@ -23,6 +23,7 @@ if (!$appt) {
 }
 
 $ticket_url   = Ticket::getFormURLWithID((int)$appt['tickets_id']);
+$plugin_url   = Plugin::getWebDir('appointmentmanager', true);
 $current_user = (int)Session::getLoginUserID();
 $is_admin     = Session::haveRight('plugin_appointmentmanager_appointment', UPDATE);
 
@@ -42,6 +43,14 @@ $dt_end   = DateTime::createFromFormat('Y-m-d\TH:i', $date_end_raw);
 if (!$dt_start || !$dt_end || $dt_end <= $dt_start || $dt_end <= new DateTime()) {
     Session::addMessageAfterRedirect(__('Invalid date selection.', 'appointmentmanager'), false, ERROR);
     Html::redirect($ticket_url);
+}
+
+if (!Session::haveRight('config', UPDATE)) {
+    $tech_id = (int)$appt['users_id_tech'];
+    if (!PluginAppointmentmanagerAvailability::isRangeAvailable($tech_id, $dt_start, $dt_end)) {
+        Session::addMessageAfterRedirect(__('The selected time slot is outside the technician\'s availability hours.', 'appointmentmanager'), false, ERROR);
+        Html::redirect($plugin_url . '/front/action.php?token=' . urlencode($token) . '&action=reschedule');
+    }
 }
 
 PluginAppointmentmanagerAppointment::updateStatus(

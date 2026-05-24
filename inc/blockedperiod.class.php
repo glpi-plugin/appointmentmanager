@@ -99,4 +99,19 @@ class PluginAppointmentmanagerBlockedPeriod {
         ]);
         return $iter->count() > 0;
     }
+
+    static function coversRange(int $users_id, \DateTime $dt_start, \DateTime $dt_end): bool {
+        global $DB;
+
+        $iter = $DB->request([
+            'FROM'  => 'glpi_plugin_appointmentmanager_blockedperiods',
+            'WHERE' => [
+                'users_id'   => $users_id,
+                'date_start' => ['<',  $dt_end->format('Y-m-d H:i:s')],
+                'date_end'   => ['>', $dt_start->format('Y-m-d H:i:s')],
+            ],
+            'LIMIT' => 1,
+        ]);
+        return $iter->count() > 0;
+    }
 }

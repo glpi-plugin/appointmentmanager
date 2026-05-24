@@ -100,6 +100,35 @@ class PluginAppointmentmanagerAvailability {
         return !PluginAppointmentmanagerBlockedPeriod::coversDatetime($users_id, $dt);
     }
 
+    static function isRangeAvailable(int $users_id, \DateTime $dt_start, \DateTime $dt_end): bool {
+        global $DB;
+
+        if ($dt_start->format('Y-m-d') !== $dt_end->format('Y-m-d')) {
+            return false;
+        }
+
+        $dow        = (int)$dt_start->format('N');
+        $time_start = $dt_start->format('H:i:s');
+        $time_end   = $dt_end->format('H:i:s');
+
+        $iter = $DB->request([
+            'FROM'  => 'glpi_plugin_appointmentmanager_availability',
+            'WHERE' => ['users_id' => $users_id, 'day_of_week' => $dow, 'is_active' => 1],
+            'LIMIT' => 1,
+        ]);
+
+        if ($iter->count() === 0) {
+            return false;
+        }
+        $row = $iter->current();
+
+        if ($time_start < $row['time_start'] || $time_end > $row['time_end']) {
+            return false;
+        }
+
+        return !PluginAppointmentmanagerBlockedPeriod::coversRange($users_id, $dt_start, $dt_end);
+    }
+
     static function validateTime(string $t): bool {
         return (bool)preg_match('/^\d{2}:\d{2}(:\d{2})?$/', $t);
     }
