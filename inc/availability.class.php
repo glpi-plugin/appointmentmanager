@@ -113,14 +113,21 @@ class PluginAppointmentmanagerAvailability {
 
         $iter = $DB->request([
             'FROM'  => 'glpi_plugin_appointmentmanager_availability',
-            'WHERE' => ['users_id' => $users_id, 'day_of_week' => $dow, 'is_active' => 1],
+            'WHERE' => ['users_id' => $users_id, 'day_of_week' => $dow],
             'LIMIT' => 1,
         ]);
 
+        // No saved record: fall back to the same defaults shown in the UI (Mon–Fri 08:00–18:00)
         if ($iter->count() === 0) {
+            $defaults = self::getDefaultGrid();
+            $row = $defaults[$dow];
+        } else {
+            $row = $iter->current();
+        }
+
+        if (empty($row['is_active'])) {
             return false;
         }
-        $row = $iter->current();
 
         if ($time_start < $row['time_start'] || $time_end > $row['time_end']) {
             return false;

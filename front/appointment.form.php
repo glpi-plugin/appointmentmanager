@@ -17,7 +17,7 @@ $appointment_id      = (int)($_POST['appointment_id'] ?? 0);
 $appointmenttypes_id = (int)($_POST['appointmenttypes_id'] ?? 0);
 $date_start_raw      = trim($_POST['date_start'] ?? '');
 $date_end_raw        = trim($_POST['date_end'] ?? '');
-$location            = mb_substr(strip_tags(trim($_POST['location'] ?? '')), 0, 255);
+$locations_id        = (int)($_POST['locations_id'] ?? 0);
 $comment             = strip_tags(trim($_POST['comment'] ?? ''));
 
 $plugin_url = Plugin::getWebDir('appointmentmanager', true);
@@ -73,7 +73,7 @@ if ($appointment_id > 0) {
         'appointmenttypes_id' => $appointmenttypes_id,
         'date_start'          => $dt_start->format('Y-m-d H:i:s'),
         'date_end'            => $dt_end->format('Y-m-d H:i:s'),
-        'location'            => $location,
+        'locations_id'        => $locations_id,
     ], (int)Session::getLoginUserID());
 
     Session::addMessageAfterRedirect(
@@ -104,7 +104,7 @@ if ($appointment_id > 0) {
         'appointmenttypes_id' => $appointmenttypes_id,
         'date_start'          => $dt_start->format('Y-m-d H:i:s'),
         'date_end'            => $dt_end->format('Y-m-d H:i:s'),
-        'location'            => $location,
+        'locations_id'        => $locations_id,
         'comment'             => $comment,
     ]);
 

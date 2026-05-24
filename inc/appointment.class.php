@@ -150,7 +150,7 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         $appointmenttypes_id = (int)($input['appointmenttypes_id'] ?? 0);
         $date_start          = $input['date_start'] ?? '';
         $date_end            = $input['date_end'] ?? '';
-        $location            = mb_substr(strip_tags(trim($input['location'] ?? '')), 0, 255);
+        $locations_id        = (int)($input['locations_id'] ?? 0);
         $comment             = strip_tags(trim($input['comment'] ?? ''));
         $token               = self::generateToken();
         $now                 = date('Y-m-d H:i:s');
@@ -163,7 +163,7 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
             'status'              => self::STATUS_PROPOSED,
             'date_start'          => $date_start,
             'date_end'            => $date_end,
-            'location'            => $location,
+            'locations_id'        => $locations_id,
             'comment'             => $comment,
             'confirm_token'       => $token,
             'date_creation'       => $now,
@@ -252,7 +252,9 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
 
         $date_start_fmt = Html::convDateTime($input['date_start'] ?? '');
         $date_end_fmt   = Html::convDateTime($input['date_end'] ?? '');
-        $location       = htmlspecialchars($input['location'] ?? '', ENT_QUOTES, 'UTF-8');
+        $locations_id   = (int)($input['locations_id'] ?? 0);
+        $location_name  = $locations_id > 0 ? htmlspecialchars(Dropdown::getDropdownName('glpi_locations', $locations_id), ENT_QUOTES, 'UTF-8') : '';
+        $comment        = htmlspecialchars($input['comment'] ?? '', ENT_QUOTES, 'UTF-8');
 
         $content  = '<p>' . __('A new appointment has been proposed for this ticket.', 'appointmentmanager') . '</p>';
         if ($type_name) {
@@ -260,8 +262,11 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         }
         $content .= '<p><strong>' . __('Start', 'appointmentmanager') . ':</strong> ' . $date_start_fmt . '</p>';
         $content .= '<p><strong>' . __('End', 'appointmentmanager') . ':</strong> ' . $date_end_fmt . '</p>';
-        if ($location) {
-            $content .= '<p><strong>' . __('Location', 'appointmentmanager') . ':</strong> ' . $location . '</p>';
+        if ($location_name) {
+            $content .= '<p><strong>' . __('Location', 'appointmentmanager') . ':</strong> ' . $location_name . '</p>';
+        }
+        if ($comment) {
+            $content .= '<p><strong>' . __('Comment', 'appointmentmanager') . ':</strong> ' . $comment . '</p>';
         }
         $content .= '<p>';
         $content .= '<a class="btn btn-sm btn-success me-2" href="' . $confirm_url . '">' . __('Confirm', 'appointmentmanager') . '</a> ';
@@ -305,7 +310,8 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
 
         $date_start_fmt = Html::convDateTime($appt['date_start']);
         $date_end_fmt   = Html::convDateTime($appt['date_end']);
-        $location       = htmlspecialchars($appt['location'] ?? '', ENT_QUOTES, 'UTF-8');
+        $locations_id   = (int)($appt['locations_id'] ?? 0);
+        $location_name  = $locations_id > 0 ? htmlspecialchars(Dropdown::getDropdownName('glpi_locations', $locations_id), ENT_QUOTES, 'UTF-8') : '';
 
         $content  = '<p>' . __('A new appointment has been proposed for this ticket.', 'appointmentmanager') . '</p>';
         if ($type_name) {
@@ -313,8 +319,8 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         }
         $content .= '<p><strong>' . __('Start', 'appointmentmanager') . ':</strong> ' . $date_start_fmt . '</p>';
         $content .= '<p><strong>' . __('End', 'appointmentmanager') . ':</strong> ' . $date_end_fmt . '</p>';
-        if ($location) {
-            $content .= '<p><strong>' . __('Location', 'appointmentmanager') . ':</strong> ' . $location . '</p>';
+        if ($location_name) {
+            $content .= '<p><strong>' . __('Location', 'appointmentmanager') . ':</strong> ' . $location_name . '</p>';
         }
 
         $badge_class = self::getStatusBadgeClass($new_status);
@@ -339,7 +345,7 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
             'appointmenttypes_id' => (int)($input['appointmenttypes_id'] ?? $appt['appointmenttypes_id']),
             'date_start'          => $input['date_start'],
             'date_end'            => $input['date_end'],
-            'location'            => mb_substr(strip_tags(trim($input['location'] ?? '')), 0, 255),
+            'locations_id'        => (int)($input['locations_id'] ?? $appt['locations_id'] ?? 0),
             'status'              => self::STATUS_PROPOSED,
             'date_mod'            => date('Y-m-d H:i:s'),
         ], ['id' => $id]);
@@ -377,7 +383,8 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         }
         $date_start_fmt = Html::convDateTime($appt['date_start']);
         $date_end_fmt   = Html::convDateTime($appt['date_end']);
-        $location       = htmlspecialchars($appt['location'] ?? '', ENT_QUOTES, 'UTF-8');
+        $locations_id   = (int)($appt['locations_id'] ?? 0);
+        $location_name  = $locations_id > 0 ? htmlspecialchars(Dropdown::getDropdownName('glpi_locations', $locations_id), ENT_QUOTES, 'UTF-8') : '';
 
         $content  = '<p>' . __('A new appointment has been proposed for this ticket.', 'appointmentmanager') . '</p>';
         if ($type_name) {
@@ -385,8 +392,8 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         }
         $content .= '<p><strong>' . __('Start', 'appointmentmanager') . ':</strong> ' . $date_start_fmt . '</p>';
         $content .= '<p><strong>' . __('End', 'appointmentmanager') . ':</strong> ' . $date_end_fmt . '</p>';
-        if ($location) {
-            $content .= '<p><strong>' . __('Location', 'appointmentmanager') . ':</strong> ' . $location . '</p>';
+        if ($location_name) {
+            $content .= '<p><strong>' . __('Location', 'appointmentmanager') . ':</strong> ' . $location_name . '</p>';
         }
         $content .= '<p>';
         $content .= '<a class="btn btn-sm btn-success me-2" href="' . $confirm_url . '">' . __('Confirm', 'appointmentmanager') . '</a> ';
@@ -503,7 +510,12 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         echo '<input type="datetime-local" id="' . $end_id . '" name="date_end" class="form-control" required></div>';
 
         echo '<div class="mb-3"><label class="form-label">' . __('Location') . '</label>';
-        echo '<input type="text" name="location" class="form-control" maxlength="255"></div>';
+        Location::dropdown([
+            'name'   => 'locations_id',
+            'value'  => $is_update ? (int)$active_appt['locations_id'] : 0,
+            'entity' => $_SESSION['glpiactive_entity'] ?? 0,
+        ]);
+        echo '</div>';
 
         if (!$is_update) {
             echo '<div class="mb-3"><label class="form-label">' . __('Comment') . '</label>';
@@ -596,7 +608,6 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         if ($is_update) {
             $js_start = json_encode(substr($active_appt['date_start'], 0, 16));
             $js_end   = json_encode(substr($active_appt['date_end'],   0, 16));
-            $js_loc   = json_encode($active_appt['location'] ?? '');
             echo '<script>
 (function() {
     var modalEl = document.getElementById(' . $j_modal_id . ');
@@ -604,10 +615,8 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
     modalEl.addEventListener("shown.bs.modal", function() {
         var s = document.getElementById(' . $j_start_id . ');
         var e = document.getElementById(' . $j_end_id . ');
-        var l = modalEl.querySelector("[name=location]");
         if (s && !s.value) s.value = ' . $js_start . ';
         if (e && !e.value) e.value = ' . $js_end . ';
-        if (l && !l.value) l.value = ' . $js_loc . ';
     });
 })();
 </script>';

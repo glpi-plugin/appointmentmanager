@@ -30,7 +30,7 @@ function plugin_appointmentmanager_install() {
             `status`              varchar(30)  COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'proposed',
             `date_start`          datetime     NOT NULL,
             `date_end`            datetime     NOT NULL,
-            `location`            varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+            `locations_id`        int(11)      NOT NULL DEFAULT 0,
             `comment`             text         COLLATE utf8mb4_unicode_ci,
             `confirm_token`       varchar(64)  COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
             `date_creation`       datetime     NOT NULL,
@@ -81,6 +81,19 @@ function plugin_appointmentmanager_install() {
             'integer',
             ['value' => 0, 'after' => 'confirm_token']
         );
+    }
+
+    if (!$DB->fieldExists('glpi_plugin_appointmentmanager_appointments', 'locations_id')) {
+        $migration->addField(
+            'glpi_plugin_appointmentmanager_appointments',
+            'locations_id',
+            'integer',
+            ['value' => 0, 'after' => 'date_end']
+        );
+    }
+
+    if ($DB->fieldExists('glpi_plugin_appointmentmanager_appointments', 'location')) {
+        $migration->dropField('glpi_plugin_appointmentmanager_appointments', 'location');
     }
 
     if (!$DB->tableExists('glpi_plugin_appointmentmanager_oauth_settings')) {
