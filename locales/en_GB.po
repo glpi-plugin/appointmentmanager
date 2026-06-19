@@ -232,3 +232,207 @@ msgstr "This appointment has already been actioned. Current status: <strong>%s</
 
 msgid "Remove this blocked period?"
 msgstr "Remove this blocked period?"
+
+msgid "Update appointment"
+msgstr "Update appointment"
+
+msgid "Update"
+msgstr "Update"
+
+msgid "Propose"
+msgstr "Propose"
+
+msgid "Appointment Manager \xe2\x80\x93 Settings"
+msgstr "Appointment Manager \xe2\x80\x93 Settings"
+
+msgid "Appointment action"
+msgstr "Appointment action"
+
+msgid "Appointment updated. The follow-up has been refreshed."
+msgstr "Appointment updated. The follow-up has been refreshed."
+
+msgid "Appointment not found."
+msgstr "Appointment not found."
+
+msgid "This appointment has already been actioned."
+msgstr "This appointment has already been actioned."
+
+msgid "Invalid appointment."
+msgstr "Invalid appointment."
+
+msgid "Reschedule appointment"
+msgstr "Reschedule appointment"
+
+msgid "Request a new appointment time"
+msgstr "Request a new appointment time"
+
+msgid "Propose this time"
+msgstr "Propose this time"
+
+msgid "Preferred start"
+msgstr "Preferred start"
+
+msgid "Preferred end"
+msgstr "Preferred end"
+
+msgid "Current start"
+msgstr "Current start"
+
+msgid "Current end"
+msgstr "Current end"
+
+msgid "Your preferred time has been submitted. A new appointment has been proposed on the ticket."
+msgstr "Your preferred time has been submitted. A new appointment has been proposed on the ticket."
+
+msgid "Existing appointment on this ticket"
+msgstr "Existing appointment on this ticket"
+
+msgid "You can still propose a new appointment, but coordinate with the other technician first."
+msgstr "You can still propose a new appointment, but coordinate with the other technician first."
+
+msgid "Tech: %s"
+msgstr "Tech: %s"
+
+msgid "From %s to %s"
+msgstr "From %s to %s"
+
+msgid "Click or drag a slot to set the appointment time."
+msgstr "Click or drag a slot to set the appointment time."
+
+msgid "Click or drag a slot to set your preferred appointment time."
+msgstr "Click or drag a slot to set your preferred appointment time."
+
+msgid "Deactivate this type?"
+msgstr "Deactivate this type?"
+
+msgid "Save all"
+msgstr "Save all"
+
+msgid "Availability"
+msgstr "Availability"
+
+msgid "Technician Availability"
+msgstr "Technician Availability"
+
+msgid "Technicians"
+msgstr "Technicians"
+
+msgid "Enrolled Technicians"
+msgstr "Enrolled Technicians"
+
+msgid "Add technician"
+msgstr "Add technician"
+
+msgid "Add technicians in the Technicians tab."
+msgstr "Add technicians in the Technicians tab."
+
+msgid "Select a technician\xe2\x80\xa6"
+msgstr "Select a technician\xe2\x80\xa6"
+
+msgid "Invalid technician."
+msgstr "Invalid technician."
+
+msgid "Technician enrolled."
+msgstr "Technician enrolled."
+
+msgid "Technician removed."
+msgstr "Technician removed."
+
+msgid "No technicians are enrolled yet."
+msgstr "No technicians are enrolled yet."
+
+msgid "No technicians enrolled yet. Add technicians whose availability should be managed."
+msgstr "No technicians enrolled yet. Add technicians whose availability should be managed."
+
+msgid "Remove this technician from availability management?"
+msgstr "Remove this technician from availability management?"
+
+msgid "Calendar Integrations"
+msgstr "Calendar Integrations"
+
+msgid "Calendar integration"
+msgstr "Calendar integration"
+
+msgid "My calendar connections"
+msgstr "My calendar connections"
+
+msgid "OAuth credentials (admin)"
+msgstr "OAuth credentials (admin)"
+
+msgid "OAuth settings saved."
+msgstr "OAuth settings saved."
+
+msgid "Calendar disconnected."
+msgstr "Calendar disconnected."
+
+msgid "Not configured"
+msgstr "Not configured"
+
+msgid "Connect"
+msgstr "Connect"
+
+msgid "Connected"
+msgstr "Connected"
+
+msgid "Disconnect"
+msgstr "Disconnect"
+
+msgid "Use \"common\" for multi-tenant apps."
+msgstr "Use \"common\" for multi-tenant apps."
+
+msgid "Contact admin to enable."
+msgstr "Contact admin to enable."
+
+msgid "Connect your calendar so appointments appear automatically and your existing events show as busy when proposing new times."
+msgstr "Connect your calendar so appointments appear automatically and your existing events show as busy when proposing new times."
+
+msgid "Register an OAuth app with each provider and enter the credentials below. The redirect URI to register is:"
+msgstr "Register an OAuth app with each provider and enter the credentials below. The redirect URI to register is:"
+
+msgid "Save credentials"
+msgstr "Save credentials"
+
+msgid "%s connected successfully."
+msgstr "%s connected successfully."
+
+msgid "Calendar authorization was denied: %s"
+msgstr "Calendar authorisation was denied: %s"
+
+msgid "Failed to connect calendar. Please try again."
+msgstr "Failed to connect calendar. Please try again."
+
+msgid "This calendar provider is not configured. Please contact your administrator."
+msgstr "This calendar provider is not configured. Please contact your administrator."
+
+msgid "Session mismatch. Please try again."
+msgstr "Session mismatch. Please try again."
+
+msgid "Invalid OAuth state. Please try again."
+msgstr "Invalid OAuth state. Please try again."
+
+msgid "Invalid callback parameters."
+msgstr "Invalid callback parameters."
+
+msgid "Ticket"
+msgstr "Ticket"
+
+msgid "Invalid token."
+msgstr "Invalid token."
+
+msgid "Invalid action."
+msgstr "Invalid action."
+
+msgid "Invalid date selection."
+msgstr "Invalid date selection."
+
+msgid "Invalid provider."
+msgstr "Invalid provider."
+
+msgid "Busy"
+msgstr "Busy"
+
+msgid "by %s"
+msgstr "by %s"
+
+msgid "Name is required."
+msgstr "Name is required."

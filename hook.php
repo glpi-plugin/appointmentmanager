@@ -74,6 +74,16 @@ function plugin_appointmentmanager_install() {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
     }
 
+    if (!$DB->tableExists('glpi_plugin_appointmentmanager_enrolled')) {
+        $migration->addPostQuery("CREATE TABLE `glpi_plugin_appointmentmanager_enrolled` (
+            `id`            int(11)  NOT NULL AUTO_INCREMENT,
+            `users_id`      int(11)  NOT NULL DEFAULT 0,
+            `date_creation` datetime NOT NULL,
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `users_id` (`users_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+    }
+
     if (!$DB->fieldExists('glpi_plugin_appointmentmanager_appointments', 'followup_id')) {
         $migration->addField(
             'glpi_plugin_appointmentmanager_appointments',

@@ -442,7 +442,7 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
             $fc_loaded = true;
         }
 
-        echo '<button type="button" class="btn btn-sm btn-outline-secondary"'
+        echo '<button type="button" class="btn btn-sm btn-ghost-secondary"'
             . ' data-bs-toggle="modal" data-bs-target="#' . $modal_id . '">'
             . '<i class="ti ' . $btn_icon . ' me-1"></i>'
             . $btn_label

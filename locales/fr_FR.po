@@ -1,0 +1,438 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Appointment Manager 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-18 00:00+0000\n"
+"PO-Revision-Date: 2026-06-18 00:00+0000\n"
+"Last-Translator: DSI\n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Appointment Manager"
+msgstr "Gestionnaire de rendez-vous"
+
+msgid "Appointments"
+msgstr "Rendez-vous"
+
+msgid "Appointment"
+msgstr "Rendez-vous"
+
+msgid "New appointment"
+msgstr "Nouveau rendez-vous"
+
+msgid "Appointment Calendar"
+msgstr "Calendrier des rendez-vous"
+
+msgid "Appointment type"
+msgstr "Type de rendez-vous"
+
+msgid "Appointment Types"
+msgstr "Types de rendez-vous"
+
+msgid "Appointment Type"
+msgstr "Type de rendez-vous"
+
+msgid "Propose appointment"
+msgstr "Proposer un rendez-vous"
+
+msgid "Update appointment"
+msgstr "Modifier le rendez-vous"
+
+msgid "Propose"
+msgstr "Proposer"
+
+msgid "Update"
+msgstr "Modifier"
+
+msgid "A new appointment has been proposed for this ticket."
+msgstr "Un nouveau rendez-vous a été proposé pour ce ticket."
+
+msgid "Confirm"
+msgstr "Confirmer"
+
+msgid "Decline"
+msgstr "Refuser"
+
+msgid "Request reschedule"
+msgstr "Demander un report"
+
+msgid "Your response has been recorded."
+msgstr "Votre réponse a été enregistrée."
+
+msgid "Proposed"
+msgstr "Proposé"
+
+msgid "Confirmed"
+msgstr "Confirmé"
+
+msgid "Declined"
+msgstr "Refusé"
+
+msgid "Reschedule requested"
+msgstr "Report demandé"
+
+msgid "Cancelled"
+msgstr "Annulé"
+
+msgid "Completed"
+msgstr "Terminé"
+
+msgid "Cancel appointment"
+msgstr "Annuler le rendez-vous"
+
+msgid "Mark completed"
+msgstr "Marquer comme terminé"
+
+msgid "Cancel this appointment?"
+msgstr "Annuler ce rendez-vous ?"
+
+msgid "Appointment cancelled."
+msgstr "Rendez-vous annulé."
+
+msgid "Appointment marked as completed."
+msgstr "Rendez-vous marqué comme terminé."
+
+msgid "Reschedule appointment"
+msgstr "Reporter le rendez-vous"
+
+msgid "Request a new appointment time"
+msgstr "Demander un nouvel horaire de rendez-vous"
+
+msgid "Propose this time"
+msgstr "Proposer ce créneau"
+
+msgid "Preferred start"
+msgstr "Début souhaité"
+
+msgid "Preferred end"
+msgstr "Fin souhaitée"
+
+msgid "Current start"
+msgstr "Début actuel"
+
+msgid "Current end"
+msgstr "Fin actuelle"
+
+msgid "Your preferred time has been submitted. A new appointment has been proposed on the ticket."
+msgstr "Votre créneau souhaité a été soumis. Un nouveau rendez-vous a été proposé sur le ticket."
+
+msgid "Manage appointments"
+msgstr "Gérer les rendez-vous"
+
+msgid "Manage appointment types"
+msgstr "Gérer les types de rendez-vous"
+
+msgid "Manage own availability"
+msgstr "Gérer sa propre disponibilité"
+
+msgid "Appointment Manager plugin"
+msgstr "Plugin Gestionnaire de rendez-vous"
+
+msgid "Appointment Manager \xe2\x80\x93 Settings"
+msgstr "Gestionnaire de rendez-vous \xe2\x80\x93 Param\xc3\xa8tres"
+
+msgid "Appointment action"
+msgstr "Action sur le rendez-vous"
+
+msgid "Appointment proposed. A follow-up has been posted on the ticket."
+msgstr "Rendez-vous proposé. Un suivi a été publié sur le ticket."
+
+msgid "Appointment updated. The follow-up has been refreshed."
+msgstr "Rendez-vous mis à jour. Le suivi a été actualisé."
+
+msgid "Appointment status updated to <strong>%s</strong> by %s."
+msgstr "Statut du rendez-vous mis à jour en <strong>%s</strong> par %s."
+
+msgid "Appointment not found."
+msgstr "Rendez-vous introuvable."
+
+msgid "Appointment not found. It may have already been actioned or cancelled."
+msgstr "Rendez-vous introuvable. Il a peut-être déjà été traité ou annulé."
+
+msgid "This appointment has already been actioned."
+msgstr "Ce rendez-vous a déjà été traité."
+
+msgid "This appointment has already been actioned. Current status: <strong>%s</strong>."
+msgstr "Ce rendez-vous a déjà été traité. Statut actuel : <strong>%s</strong>."
+
+msgid "Invalid appointment."
+msgstr "Rendez-vous invalide."
+
+msgid "Please create a new appointment for this ticket."
+msgstr "Veuillez créer un nouveau rendez-vous pour ce ticket."
+
+msgid "All appointments for this ticket"
+msgstr "Tous les rendez-vous pour ce ticket"
+
+msgid "Existing appointment on this ticket"
+msgstr "Rendez-vous existant sur ce ticket"
+
+msgid "You can still propose a new appointment, but coordinate with the other technician first."
+msgstr "Vous pouvez toujours proposer un nouveau rendez-vous, mais coordonnez-vous d'abord avec l'autre technicien."
+
+msgid "You do not have permission to create appointments."
+msgstr "Vous n'avez pas la permission de créer des rendez-vous."
+
+msgid "You are not allowed to act on this appointment."
+msgstr "Vous n'êtes pas autorisé à agir sur ce rendez-vous."
+
+msgid "Technician Weekly Availability"
+msgstr "Disponibilité hebdomadaire du technicien"
+
+msgid "Technician Availability"
+msgstr "Disponibilité des techniciens"
+
+msgid "Availability"
+msgstr "Disponibilité"
+
+msgid "Availability saved."
+msgstr "Disponibilité enregistrée."
+
+msgid "Technicians"
+msgstr "Techniciens"
+
+msgid "All technicians"
+msgstr "Tous les techniciens"
+
+msgid "Enrolled Technicians"
+msgstr "Techniciens inscrits"
+
+msgid "Add technician"
+msgstr "Ajouter un technicien"
+
+msgid "Add technicians in the Technicians tab."
+msgstr "Ajoutez des techniciens dans l'onglet Techniciens."
+
+msgid "Select a technician\xe2\x80\xa6"
+msgstr "S\xc3\xa9lectionner un technicien\xe2\x80\xa6"
+
+msgid "Invalid technician."
+msgstr "Technicien invalide."
+
+msgid "Technician enrolled."
+msgstr "Technicien inscrit."
+
+msgid "Technician removed."
+msgstr "Technicien retiré."
+
+msgid "No technicians are enrolled yet."
+msgstr "Aucun technicien n'est encore inscrit."
+
+msgid "No technicians enrolled yet. Add technicians whose availability should be managed."
+msgstr "Aucun technicien inscrit. Ajoutez des techniciens dont la disponibilité doit être gérée."
+
+msgid "Remove this technician from availability management?"
+msgstr "Retirer ce technicien de la gestion des disponibilités ?"
+
+msgid "Tech: %s"
+msgstr "Tech : %s"
+
+msgid "Blocked Periods"
+msgstr "Périodes bloquées"
+
+msgid "Blocked Period"
+msgstr "Période bloquée"
+
+msgid "Add blocked period"
+msgstr "Ajouter une période bloquée"
+
+msgid "Blocked period added."
+msgstr "Période bloquée ajoutée."
+
+msgid "Blocked period removed."
+msgstr "Période bloquée supprimée."
+
+msgid "Invalid date range for blocked period."
+msgstr "Plage de dates invalide pour la période bloquée."
+
+msgid "No blocked periods defined."
+msgstr "Aucune période bloquée définie."
+
+msgid "Remove this blocked period?"
+msgstr "Supprimer cette période bloquée ?"
+
+msgid "Add type"
+msgstr "Ajouter un type"
+
+msgid "Add appointment type"
+msgstr "Ajouter un type de rendez-vous"
+
+msgid "Edit appointment type"
+msgstr "Modifier le type de rendez-vous"
+
+msgid "Deactivate this type?"
+msgstr "Désactiver ce type ?"
+
+msgid "Built-in"
+msgstr "Intégré"
+
+msgid "Built-in appointment types cannot be deleted."
+msgstr "Les types de rendez-vous intégrés ne peuvent pas être supprimés."
+
+msgid "Appointment type added."
+msgstr "Type de rendez-vous ajouté."
+
+msgid "Appointment type updated."
+msgstr "Type de rendez-vous mis à jour."
+
+msgid "Appointment type deactivated."
+msgstr "Type de rendez-vous désactivé."
+
+msgid "Tabler icon class"
+msgstr "Classe d'icône Tabler"
+
+msgid "Save all"
+msgstr "Tout enregistrer"
+
+msgid "Save credentials"
+msgstr "Enregistrer les identifiants"
+
+msgid "Calendar Integrations"
+msgstr "Intégrations de calendrier"
+
+msgid "Calendar integration"
+msgstr "Intégration du calendrier"
+
+msgid "Calendar"
+msgstr "Calendrier"
+
+msgid "My calendar connections"
+msgstr "Mes connexions de calendrier"
+
+msgid "OAuth credentials (admin)"
+msgstr "Identifiants OAuth (admin)"
+
+msgid "OAuth settings saved."
+msgstr "Paramètres OAuth enregistrés."
+
+msgid "Calendar disconnected."
+msgstr "Calendrier déconnecté."
+
+msgid "Not configured"
+msgstr "Non configuré"
+
+msgid "Connect"
+msgstr "Connecter"
+
+msgid "Connected"
+msgstr "Connecté"
+
+msgid "Disconnect"
+msgstr "Déconnecter"
+
+msgid "Use \"common\" for multi-tenant apps."
+msgstr "Utilisez « common » pour les applications multi-locataires."
+
+msgid "Contact admin to enable."
+msgstr "Contactez l'administrateur pour activer."
+
+msgid "Connect your calendar so appointments appear automatically and your existing events show as busy when proposing new times."
+msgstr "Connectez votre calendrier pour que les rendez-vous apparaissent automatiquement et que vos événements existants soient affichés comme occupés lors de la proposition de nouveaux créneaux."
+
+msgid "Register an OAuth app with each provider and enter the credentials below. The redirect URI to register is:"
+msgstr "Enregistrez une application OAuth chez chaque fournisseur et saisissez les identifiants ci-dessous. L'URI de redirection à enregistrer est :"
+
+msgid "%s connected successfully."
+msgstr "%s connecté avec succès."
+
+msgid "Calendar authorization was denied: %s"
+msgstr "L'autorisation du calendrier a été refusée : %s"
+
+msgid "Failed to connect calendar. Please try again."
+msgstr "Échec de la connexion au calendrier. Veuillez réessayer."
+
+msgid "This calendar provider is not configured. Please contact your administrator."
+msgstr "Ce fournisseur de calendrier n'est pas configuré. Veuillez contacter votre administrateur."
+
+msgid "Session mismatch. Please try again."
+msgstr "Erreur de session. Veuillez réessayer."
+
+msgid "Invalid OAuth state. Please try again."
+msgstr "État OAuth invalide. Veuillez réessayer."
+
+msgid "Invalid callback parameters."
+msgstr "Paramètres de rappel invalides."
+
+msgid "Invalid ticket."
+msgstr "Ticket invalide."
+
+msgid "Ticket not found."
+msgstr "Ticket introuvable."
+
+msgid "Ticket"
+msgstr "Ticket"
+
+msgid "Invalid date format."
+msgstr "Format de date invalide."
+
+msgid "End date must be after start date."
+msgstr "La date de fin doit être postérieure à la date de début."
+
+msgid "Appointment cannot be set in the past."
+msgstr "Le rendez-vous ne peut pas être fixé dans le passé."
+
+msgid "Invalid date selection."
+msgstr "Sélection de date invalide."
+
+msgid "Invalid or missing appointment token."
+msgstr "Jeton de rendez-vous invalide ou manquant."
+
+msgid "Invalid token."
+msgstr "Jeton invalide."
+
+msgid "Invalid action."
+msgstr "Action invalide."
+
+msgid "Invalid provider."
+msgstr "Fournisseur invalide."
+
+msgid "Back to ticket"
+msgstr "Retour au ticket"
+
+msgid "Could not process the action. Please contact support."
+msgstr "Impossible de traiter l'action. Veuillez contacter le support."
+
+msgid "Name is required."
+msgstr "Le nom est obligatoire."
+
+msgid "Select a type\xe2\x80\xa6"
+msgstr "S\xc3\xa9lectionner un type\xe2\x80\xa6"
+
+msgid "Office, building, or remote"
+msgstr "Bureau, bâtiment ou à distance"
+
+msgid "Click or drag a slot to set the appointment time."
+msgstr "Cliquez ou faites glisser pour définir l'heure du rendez-vous."
+
+msgid "Click or drag a slot to set your preferred appointment time."
+msgstr "Cliquez ou faites glisser pour indiquer votre créneau souhaité."
+
+msgid "From %s to %s"
+msgstr "Du %s au %s"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Start"
+msgstr "Début"
+
+msgid "End"
+msgstr "Fin"
+
+msgid "Location"
+msgstr "Localisation"
+
+msgid "Unavailable"
+msgstr "Indisponible"
+
+msgid "Busy"
+msgstr "Occupé"
+
+msgid "by %s"
+msgstr "par %s"
+
+msgid "Settings"
+msgstr "Paramètres"
