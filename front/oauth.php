@@ -3,6 +3,11 @@ include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
+if (!Session::haveRight('plugin_appointmentmanager_calendar', READ)) {
+    Html::displayRightError();
+    exit;
+}
+
 $provider = trim($_GET['provider'] ?? '');
 if (!in_array($provider, ['google', 'microsoft'], true)) {
     Html::header(__('Calendar integration', 'appointmentmanager'), $_SERVER['PHP_SELF'], 'tools', 'PluginAppointmentmanagerConfig');

@@ -67,6 +67,12 @@ class PluginAppointmentmanagerProfile extends CommonDBTM {
                 'field'    => 'plugin_appointmentmanager_availability',
                 'rights'   => [READ => __('Read'), UPDATE => __('Update')],
             ],
+            [
+                'itemtype' => 'PluginAppointmentmanagerCalendar',
+                'label'    => __('Use calendar integration', 'appointmentmanager'),
+                'field'    => 'plugin_appointmentmanager_calendar',
+                'rights'   => [READ => __('Use')],
+            ],
         ];
     }
 
@@ -84,6 +90,7 @@ class PluginAppointmentmanagerProfile extends CommonDBTM {
                 'plugin_appointmentmanager_appointment',
                 'plugin_appointmentmanager_type',
                 'plugin_appointmentmanager_availability',
+                'plugin_appointmentmanager_calendar',
             ]);
         }
 
@@ -104,6 +111,7 @@ class PluginAppointmentmanagerProfile extends CommonDBTM {
             'plugin_appointmentmanager_appointment',
             'plugin_appointmentmanager_type',
             'plugin_appointmentmanager_availability',
+            'plugin_appointmentmanager_calendar',
         ];
 
         foreach ($fields as $field) {
@@ -116,7 +124,7 @@ class PluginAppointmentmanagerProfile extends CommonDBTM {
             if ($existing->count() > 0) {
                 $rights = ($field === 'plugin_appointmentmanager_appointment')
                     ? (READ | CREATE | UPDATE | DELETE)
-                    : (READ | UPDATE);
+                    : (($field === 'plugin_appointmentmanager_calendar') ? READ : (READ | UPDATE));
                 $DB->update('glpi_profilerights', [
                     'rights' => $rights,
                 ], [
@@ -132,6 +140,7 @@ class PluginAppointmentmanagerProfile extends CommonDBTM {
             'plugin_appointmentmanager_appointment',
             'plugin_appointmentmanager_type',
             'plugin_appointmentmanager_availability',
+            'plugin_appointmentmanager_calendar',
         ]);
     }
 }

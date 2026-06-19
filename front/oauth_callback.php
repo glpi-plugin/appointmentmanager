@@ -3,6 +3,11 @@ include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
+if (!Session::haveRight('plugin_appointmentmanager_calendar', READ)) {
+    Html::displayRightError();
+    exit;
+}
+
 $plugin_url   = Plugin::getWebDir('appointmentmanager', true);
 $integrations = $plugin_url . '/front/config.php?tab=integrations';
 

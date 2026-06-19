@@ -102,12 +102,15 @@ $can_manage_types     = Session::haveRight('plugin_appointmentmanager_type', UPD
 $can_manage_techs     = Session::haveRight('plugin_appointmentmanager_appointment', UPDATE) || $is_glpi_admin;
 $can_manage_all_avail = $is_glpi_admin;
 $can_manage_own_avail = Session::haveRight('plugin_appointmentmanager_availability', UPDATE) || $can_manage_all_avail;
+$can_use_calendar     = Session::haveRight('plugin_appointmentmanager_calendar', READ) || $is_glpi_admin;
+$can_self_enroll      = Session::haveRight('plugin_appointmentmanager_appointment', READ);
 $is_admin             = $can_manage_techs;
 
 if (!isset($_GET['tab'])) {
     if ($can_manage_types)         { $tab = 'types'; }
     elseif ($can_manage_own_avail) { $tab = 'availability'; }
-    else                           { $tab = 'integrations'; }
+    elseif ($can_use_calendar)     { $tab = 'integrations'; }
+    else                           { $tab = 'types'; }
 } else {
     $tab = $_GET['tab'];
 }
@@ -120,10 +123,10 @@ $csrf = Session::getNewCSRFToken();
 
 $tab_permissions = [
     'types'        => $can_manage_types,
-    'technicians'  => $can_manage_techs,
+    'technicians'  => $can_manage_techs || $can_self_enroll,
     'availability' => $can_manage_own_avail,
     'blocked'      => $can_manage_own_avail,
-    'integrations' => true,
+    'integrations' => $can_use_calendar,
 ];
 if (!($tab_permissions[$tab] ?? false)) {
     Html::displayRightError();
@@ -183,9 +186,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Html::redirect($plugin_url . '/front/config.php?tab=types');
     }
 
-    if ($action === 'enroll_tech' && $is_admin) {
+    if ($action === 'enroll_tech') {
         global $DB;
         $users_id = (int)($_POST['users_id'] ?? 0);
+        $is_self  = $users_id === (int)Session::getLoginUserID();
+        if (!$is_admin && !($is_self && $can_self_enroll)) {
+            Html::displayRightError();
+            exit;
+        }
         if ($users_id > 0 && am_is_valid_tech($users_id)) {
             $DB->insert('glpi_plugin_appointmentmanager_enrolled', [
                 'users_id'      => $users_id,
@@ -198,9 +206,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Html::redirect($plugin_url . '/front/config.php?tab=technicians');
     }
 
-    if ($action === 'unenroll_tech' && $is_admin) {
+    if ($action === 'unenroll_tech') {
         global $DB;
         $users_id = (int)($_POST['users_id'] ?? 0);
+        $is_self  = $users_id === (int)Session::getLoginUserID();
+        if (!$is_admin && !($is_self && $can_self_enroll)) {
+            Html::displayRightError();
+            exit;
+        }
         if ($users_id > 0) {
             $DB->delete('glpi_plugin_appointmentmanager_enrolled', ['users_id' => $users_id]);
             Session::addMessageAfterRedirect(__('Technician removed.', 'appointmentmanager'), false, INFO);
@@ -258,6 +271,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($action === 'disconnect_calendar') {
+        if (!$can_use_calendar) {
+            Html::displayRightError();
+            exit;
+        }
         $provider = trim($_POST['provider'] ?? '');
         if (in_array($provider, ['google', 'microsoft'], true)) {
             PluginAppointmentmanagerOAuthProvider::deleteToken((int)Session::getLoginUserID(), $provider);
@@ -411,63 +428,96 @@ if ($tab === 'types') {
 
 // ── Tab: Technicians ───────────────────────────────────────────────────────────
 if ($tab === 'technicians') {
-    $enrolled    = am_get_tech_users();
-    $unenrolled  = am_get_unenrolled_tech_users();
+    $current_uid = (int)Session::getLoginUserID();
 
-    echo '<div class="card"><div class="card-header d-flex justify-content-between align-items-center">';
-    echo '<h5 class="mb-0">' . __('Enrolled Technicians', 'appointmentmanager') . '</h5>';
-    if (!empty($unenrolled)) {
-        echo '<button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#amAddTechModal">'
-            . '<i class="ti ti-plus me-1"></i>' . __('Add technician', 'appointmentmanager') . '</button>';
-    }
-    echo '</div><div class="card-body">';
+    if ($can_manage_techs) {
+        $enrolled   = am_get_tech_users();
+        $unenrolled = am_get_unenrolled_tech_users();
 
-    if (empty($enrolled)) {
-        echo '<p class="text-muted">' . __('No technicians enrolled yet. Add technicians whose availability should be managed.', 'appointmentmanager') . '</p>';
+        echo '<div class="card"><div class="card-header d-flex justify-content-between align-items-center">';
+        echo '<h5 class="mb-0">' . __('Enrolled Technicians', 'appointmentmanager') . '</h5>';
         if (!empty($unenrolled)) {
             echo '<button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#amAddTechModal">'
                 . '<i class="ti ti-plus me-1"></i>' . __('Add technician', 'appointmentmanager') . '</button>';
         }
-    } else {
-        echo '<table class="table table-hover mb-0"><thead><tr>'
-            . '<th>' . __('Technician') . '</th><th></th>'
-            . '</tr></thead><tbody>';
-        foreach ($enrolled as $uid => $uname) {
-            echo '<tr>';
-            echo '<td class="align-middle">' . htmlspecialchars($uname, ENT_QUOTES, 'UTF-8') . '</td>';
-            echo '<td class="text-end">';
-            echo '<form method="POST" action="" style="display:inline" onsubmit="return confirm(' . json_encode(__('Remove this technician from availability management?', 'appointmentmanager')) . ')">';
-            echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
-            echo Html::hidden('action', ['value' => 'unenroll_tech']);
-            echo Html::hidden('users_id', ['value' => $uid]);
-            echo '<button type="submit" class="btn btn-sm btn-outline-danger"><i class="ti ti-trash"></i></button>';
-            echo '</form>';
-            echo '</td></tr>';
-        }
-        echo '</tbody></table>';
-    }
-    echo '</div></div>';
+        echo '</div><div class="card-body">';
 
-    if (!empty($unenrolled)) {
-        echo '<div class="modal fade" id="amAddTechModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content">';
-        echo '<form method="POST" action="">';
-        echo Html::hidden('_glpi_csrf_token', ['value' => $csrf]);
-        echo Html::hidden('action', ['value' => 'enroll_tech']);
-        echo '<div class="modal-header"><h5 class="modal-title">' . __('Add technician', 'appointmentmanager') . '</h5>';
-        echo '<button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>';
-        echo '<div class="modal-body">';
-        echo '<div class="mb-3"><label class="form-label">' . __('Technician') . ' *</label>';
-        echo '<select name="users_id" class="form-select" required>';
-        echo '<option value="">' . __('Select a technician…', 'appointmentmanager') . '</option>';
-        foreach ($unenrolled as $uid => $uname) {
-            echo '<option value="' . (int)$uid . '">' . htmlspecialchars($uname, ENT_QUOTES, 'UTF-8') . '</option>';
+        if (empty($enrolled)) {
+            echo '<p class="text-muted">' . __('No technicians enrolled yet. Add technicians whose availability should be managed.', 'appointmentmanager') . '</p>';
+            if (!empty($unenrolled)) {
+                echo '<button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#amAddTechModal">'
+                    . '<i class="ti ti-plus me-1"></i>' . __('Add technician', 'appointmentmanager') . '</button>';
+            }
+        } else {
+            echo '<table class="table table-hover mb-0"><thead><tr>'
+                . '<th>' . __('Technician') . '</th><th></th>'
+                . '</tr></thead><tbody>';
+            foreach ($enrolled as $uid => $uname) {
+                echo '<tr>';
+                echo '<td class="align-middle">' . htmlspecialchars($uname, ENT_QUOTES, 'UTF-8') . '</td>';
+                echo '<td class="text-end">';
+                echo '<form method="POST" action="" style="display:inline" onsubmit="return confirm(' . json_encode(__('Remove this technician from availability management?', 'appointmentmanager')) . ')">';
+                echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
+                echo Html::hidden('action', ['value' => 'unenroll_tech']);
+                echo Html::hidden('users_id', ['value' => $uid]);
+                echo '<button type="submit" class="btn btn-sm btn-outline-danger"><i class="ti ti-trash"></i></button>';
+                echo '</form>';
+                echo '</td></tr>';
+            }
+            echo '</tbody></table>';
         }
-        echo '</select></div>';
-        echo '</div>';
-        echo '<div class="modal-footer">';
-        echo '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' . __('Cancel') . '</button>';
-        echo '<button type="submit" class="btn btn-primary">' . __('Add') . '</button>';
-        echo '</div></form></div></div></div>';
+        echo '</div></div>';
+
+        if (!empty($unenrolled)) {
+            echo '<div class="modal fade" id="amAddTechModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content">';
+            echo '<form method="POST" action="">';
+            echo Html::hidden('_glpi_csrf_token', ['value' => $csrf]);
+            echo Html::hidden('action', ['value' => 'enroll_tech']);
+            echo '<div class="modal-header"><h5 class="modal-title">' . __('Add technician', 'appointmentmanager') . '</h5>';
+            echo '<button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>';
+            echo '<div class="modal-body">';
+            echo '<div class="mb-3"><label class="form-label">' . __('Technician') . ' *</label>';
+            echo '<select name="users_id" class="form-select" required>';
+            echo '<option value="">' . __('Select a technician…', 'appointmentmanager') . '</option>';
+            foreach ($unenrolled as $uid => $uname) {
+                echo '<option value="' . (int)$uid . '">' . htmlspecialchars($uname, ENT_QUOTES, 'UTF-8') . '</option>';
+            }
+            echo '</select></div>';
+            echo '</div>';
+            echo '<div class="modal-footer">';
+            echo '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' . __('Cancel') . '</button>';
+            echo '<button type="submit" class="btn btn-primary">' . __('Add') . '</button>';
+            echo '</div></form></div></div></div>';
+        }
+    } else {
+        $enrolled    = am_get_tech_users();
+        $is_enrolled = isset($enrolled[$current_uid]);
+
+        echo '<div class="card"><div class="card-header">';
+        echo '<h5 class="mb-0">' . __('My Technician Enrollment', 'appointmentmanager') . '</h5>';
+        echo '</div><div class="card-body">';
+        if ($is_enrolled) {
+            echo '<p class="text-success mb-3"><i class="ti ti-check me-1"></i>'
+                . __('You are currently enrolled for availability management.', 'appointmentmanager') . '</p>';
+            echo '<form method="POST" action="" onsubmit="return confirm(' . json_encode(__('Remove yourself from availability management?', 'appointmentmanager')) . ')">';
+            echo Html::hidden('_glpi_csrf_token', ['value' => $csrf]);
+            echo Html::hidden('action', ['value' => 'unenroll_tech']);
+            echo Html::hidden('users_id', ['value' => $current_uid]);
+            echo '<button type="submit" class="btn btn-outline-danger"><i class="ti ti-user-minus me-1"></i>'
+                . __('Unenroll myself', 'appointmentmanager') . '</button>';
+            echo '</form>';
+        } else {
+            echo '<p class="text-muted mb-3">'
+                . __('You are not enrolled. Enroll to make your availability visible for appointment scheduling.', 'appointmentmanager') . '</p>';
+            echo '<form method="POST" action="">';
+            echo Html::hidden('_glpi_csrf_token', ['value' => $csrf]);
+            echo Html::hidden('action', ['value' => 'enroll_tech']);
+            echo Html::hidden('users_id', ['value' => $current_uid]);
+            echo '<button type="submit" class="btn btn-primary"><i class="ti ti-user-plus me-1"></i>'
+                . __('Enroll myself', 'appointmentmanager') . '</button>';
+            echo '</form>';
+        }
+        echo '</div></div>';
     }
 }
 
