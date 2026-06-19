@@ -99,11 +99,11 @@ function am_is_valid_tech(int $users_id): bool {
 $plugin_url           = Plugin::getWebDir('appointmentmanager', true);
 $is_glpi_admin        = Session::haveRight('config', UPDATE);
 $can_manage_types     = Session::haveRight('plugin_appointmentmanager_type', UPDATE) || $is_glpi_admin;
-$can_manage_techs     = Session::haveRight('plugin_appointmentmanager_appointment', UPDATE) || $is_glpi_admin;
+$can_manage_techs     = Session::haveRight('plugin_appointmentmanager_technician', UPDATE) || $is_glpi_admin;
 $can_manage_all_avail = $is_glpi_admin;
 $can_manage_own_avail = Session::haveRight('plugin_appointmentmanager_availability', UPDATE) || $can_manage_all_avail;
 $can_use_calendar     = Session::haveRight('plugin_appointmentmanager_calendar', READ) || $is_glpi_admin;
-$can_self_enroll      = Session::haveRight('plugin_appointmentmanager_appointment', READ);
+$can_self_enroll      = Session::haveRight('plugin_appointmentmanager_technician', READ);
 $is_admin             = $can_manage_techs;
 
 if (!isset($_GET['tab'])) {

@@ -68,6 +68,12 @@ class PluginAppointmentmanagerProfile extends CommonDBTM {
                 'rights'   => [READ => __('Read'), UPDATE => __('Update')],
             ],
             [
+                'itemtype' => 'PluginAppointmentmanagerEnrolled',
+                'label'    => __('Manage technician enrollment', 'appointmentmanager'),
+                'field'    => 'plugin_appointmentmanager_technician',
+                'rights'   => [READ => __('Enroll self'), UPDATE => __('Manage all')],
+            ],
+            [
                 'itemtype' => 'PluginAppointmentmanagerCalendar',
                 'label'    => __('Use calendar integration', 'appointmentmanager'),
                 'field'    => 'plugin_appointmentmanager_calendar',
@@ -90,6 +96,7 @@ class PluginAppointmentmanagerProfile extends CommonDBTM {
                 'plugin_appointmentmanager_appointment',
                 'plugin_appointmentmanager_type',
                 'plugin_appointmentmanager_availability',
+                'plugin_appointmentmanager_technician',
                 'plugin_appointmentmanager_calendar',
             ]);
         }
@@ -111,6 +118,7 @@ class PluginAppointmentmanagerProfile extends CommonDBTM {
             'plugin_appointmentmanager_appointment',
             'plugin_appointmentmanager_type',
             'plugin_appointmentmanager_availability',
+            'plugin_appointmentmanager_technician',
             'plugin_appointmentmanager_calendar',
         ];
 
@@ -140,6 +148,7 @@ class PluginAppointmentmanagerProfile extends CommonDBTM {
             'plugin_appointmentmanager_appointment',
             'plugin_appointmentmanager_type',
             'plugin_appointmentmanager_availability',
+            'plugin_appointmentmanager_technician',
             'plugin_appointmentmanager_calendar',
         ]);
     }
