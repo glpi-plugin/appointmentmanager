@@ -96,18 +96,36 @@ function am_is_valid_tech(int $users_id): bool {
     return count($iter) > 0;
 }
 
-$tab          = $_GET['tab'] ?? 'types';
+$plugin_url           = Plugin::getWebDir('appointmentmanager', true);
+$is_glpi_admin        = Session::haveRight('config', UPDATE);
+$can_manage_types     = Session::haveRight('plugin_appointmentmanager_type', UPDATE) || $is_glpi_admin;
+$can_manage_techs     = Session::haveRight('plugin_appointmentmanager_appointment', UPDATE) || $is_glpi_admin;
+$can_manage_all_avail = $can_manage_techs;
+$can_manage_own_avail = Session::haveRight('plugin_appointmentmanager_availability', UPDATE) || $can_manage_all_avail;
+$is_admin             = $can_manage_techs;
+
+if (!isset($_GET['tab'])) {
+    if ($can_manage_types)         { $tab = 'types'; }
+    elseif ($can_manage_own_avail) { $tab = 'availability'; }
+    else                           { $tab = 'integrations'; }
+} else {
+    $tab = $_GET['tab'];
+}
 $allowed_tabs = ['types', 'technicians', 'availability', 'blocked', 'integrations'];
 if (!in_array($tab, $allowed_tabs, true)) {
     $tab = 'types';
 }
 
-$plugin_url = Plugin::getWebDir('appointmentmanager', true);
-$is_admin   = Session::haveRight('plugin_appointmentmanager_appointment', UPDATE) || Session::haveRight('config', UPDATE);
-$csrf       = Session::getNewCSRFToken();
+$csrf = Session::getNewCSRFToken();
 
-// Non-admins may only access the integrations tab
-if ($tab !== 'integrations' && !$is_admin) {
+$tab_permissions = [
+    'types'        => $can_manage_types,
+    'technicians'  => $can_manage_techs,
+    'availability' => $can_manage_own_avail,
+    'blocked'      => $can_manage_own_avail,
+    'integrations' => true,
+];
+if (!($tab_permissions[$tab] ?? false)) {
     Html::displayRightError();
     exit;
 }
@@ -116,6 +134,13 @@ if ($tab !== 'integrations' && !$is_admin) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
+
+    if ($action === 'add_type' || $action === 'edit_type' || $action === 'delete_type') {
+        if (!$can_manage_types) {
+            Html::displayRightError();
+            exit;
+        }
+    }
 
     if ($action === 'add_type' || $action === 'edit_type') {
         $name = trim($_POST['name'] ?? '');
@@ -184,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($action === 'save_all_days') {
-        $target_user = $is_admin ? (int)($_POST['users_id'] ?? Session::getLoginUserID()) : (int)Session::getLoginUserID();
+        $target_user = $can_manage_all_avail ? (int)($_POST['users_id'] ?? Session::getLoginUserID()) : (int)Session::getLoginUserID();
         $days = [];
         for ($d = 1; $d <= 7; $d++) {
             $days[] = [
@@ -200,7 +225,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($action === 'add_blocked') {
-        $target_user = $is_admin ? (int)($_POST['users_id'] ?? Session::getLoginUserID()) : (int)Session::getLoginUserID();
+        $target_user = $can_manage_all_avail ? (int)($_POST['users_id'] ?? Session::getLoginUserID()) : (int)Session::getLoginUserID();
         $date_start  = $_POST['date_start'] ?? '';
         $date_end    = $_POST['date_end']   ?? '';
         if ($date_start && $date_end && $date_start < $date_end) {
@@ -214,7 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'delete_blocked') {
         $id          = (int)($_POST['id'] ?? 0);
-        $target_user = $is_admin ? (int)($_POST['users_id'] ?? Session::getLoginUserID()) : (int)Session::getLoginUserID();
+        $target_user = $can_manage_all_avail ? (int)($_POST['users_id'] ?? Session::getLoginUserID()) : (int)Session::getLoginUserID();
         PluginAppointmentmanagerBlockedPeriod::delete($id, (int)Session::getLoginUserID());
         Session::addMessageAfterRedirect(__('Blocked period removed.', 'appointmentmanager'), false, INFO);
         Html::redirect($plugin_url . '/front/config.php?tab=blocked&users_id=' . $target_user);
@@ -259,6 +284,9 @@ $tab_labels = [
     'integrations' => __('Calendar Integrations', 'appointmentmanager'),
 ];
 foreach ($tab_labels as $key => $label) {
+    if (!($tab_permissions[$key] ?? false)) {
+        continue;
+    }
     $active = $tab === $key ? ' active' : '';
     echo '<li class="nav-item"><a class="nav-link' . $active . '" href="'
         . htmlspecialchars($plugin_url . '/front/config.php?tab=' . $key, ENT_QUOTES, 'UTF-8') . '">'
@@ -445,23 +473,23 @@ if ($tab === 'technicians') {
 
 // ── Tab: Availability ──────────────────────────────────────────────────────────
 if ($tab === 'availability') {
-    $techs = $is_admin ? am_get_tech_users() : [];
+    $techs = $can_manage_all_avail ? am_get_tech_users() : [];
 
-    if ($is_admin && empty($techs)) {
+    if ($can_manage_all_avail && empty($techs)) {
         echo '<div class="alert alert-info">'
             . __('No technicians are enrolled yet.', 'appointmentmanager') . ' '
             . '<a href="' . htmlspecialchars($plugin_url . '/front/config.php?tab=technicians', ENT_QUOTES, 'UTF-8') . '">'
             . __('Add technicians in the Technicians tab.', 'appointmentmanager')
             . '</a></div>';
     } else {
-        $first_enrolled    = $is_admin && !empty($techs) ? array_key_first($techs) : null;
-        $default_user      = $is_admin ? ($first_enrolled ?? (int)Session::getLoginUserID()) : (int)Session::getLoginUserID();
-        $selected_user     = $is_admin ? (int)($_GET['users_id'] ?? $default_user) : (int)Session::getLoginUserID();
+        $first_enrolled    = $can_manage_all_avail && !empty($techs) ? array_key_first($techs) : null;
+        $default_user      = $can_manage_all_avail ? ($first_enrolled ?? (int)Session::getLoginUserID()) : (int)Session::getLoginUserID();
+        $selected_user     = $can_manage_all_avail ? (int)($_GET['users_id'] ?? $default_user) : (int)Session::getLoginUserID();
 
         echo '<div class="card"><div class="card-header"><h5 class="mb-0">'
             . __('Technician Weekly Availability', 'appointmentmanager') . '</h5></div><div class="card-body">';
 
-    if ($is_admin) {
+    if ($can_manage_all_avail) {
         echo '<div class="mb-3"><label class="form-label">' . __('Technician') . '</label>';
         echo '<select class="form-select" style="max-width:300px" onchange="location.href=\''
             . htmlspecialchars($plugin_url . '/front/config.php?tab=availability&users_id=', ENT_QUOTES, 'UTF-8') . '\'+this.value">';
@@ -500,18 +528,18 @@ if ($tab === 'availability') {
 
 // ── Tab: Blocked Periods ───────────────────────────────────────────────────────
 if ($tab === 'blocked') {
-    $techs = $is_admin ? am_get_tech_users() : [];
+    $techs = $can_manage_all_avail ? am_get_tech_users() : [];
 
-    if ($is_admin && empty($techs)) {
+    if ($can_manage_all_avail && empty($techs)) {
         echo '<div class="alert alert-info">'
             . __('No technicians are enrolled yet.', 'appointmentmanager') . ' '
             . '<a href="' . htmlspecialchars($plugin_url . '/front/config.php?tab=technicians', ENT_QUOTES, 'UTF-8') . '">'
             . __('Add technicians in the Technicians tab.', 'appointmentmanager')
             . '</a></div>';
     } else {
-        $first_enrolled = $is_admin && !empty($techs) ? array_key_first($techs) : null;
-        $default_user   = $is_admin ? ($first_enrolled ?? (int)Session::getLoginUserID()) : (int)Session::getLoginUserID();
-        $selected_user  = $is_admin ? (int)($_GET['users_id'] ?? $default_user) : (int)Session::getLoginUserID();
+        $first_enrolled = $can_manage_all_avail && !empty($techs) ? array_key_first($techs) : null;
+        $default_user   = $can_manage_all_avail ? ($first_enrolled ?? (int)Session::getLoginUserID()) : (int)Session::getLoginUserID();
+        $selected_user  = $can_manage_all_avail ? (int)($_GET['users_id'] ?? $default_user) : (int)Session::getLoginUserID();
 
         echo '<div class="card"><div class="card-header d-flex justify-content-between align-items-center">';
         echo '<h5 class="mb-0">' . __('Blocked Periods', 'appointmentmanager') . '</h5>';
@@ -519,7 +547,7 @@ if ($tab === 'blocked') {
             . '<i class="ti ti-plus me-1"></i>' . __('Add blocked period', 'appointmentmanager') . '</button>';
         echo '</div><div class="card-body">';
 
-        if ($is_admin) {
+        if ($can_manage_all_avail) {
             echo '<div class="mb-3"><label class="form-label">' . __('Technician') . '</label>';
             echo '<select class="form-select" style="max-width:300px" onchange="location.href=\''
                 . htmlspecialchars($plugin_url . '/front/config.php?tab=blocked&users_id=', ENT_QUOTES, 'UTF-8') . '\'+this.value">';
