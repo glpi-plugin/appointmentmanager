@@ -100,7 +100,7 @@ $plugin_url           = Plugin::getWebDir('appointmentmanager', true);
 $is_glpi_admin        = Session::haveRight('config', UPDATE);
 $can_manage_types     = Session::haveRight('plugin_appointmentmanager_type', UPDATE) || $is_glpi_admin;
 $can_manage_techs     = Session::haveRight('plugin_appointmentmanager_appointment', UPDATE) || $is_glpi_admin;
-$can_manage_all_avail = $can_manage_techs;
+$can_manage_all_avail = $is_glpi_admin;
 $can_manage_own_avail = Session::haveRight('plugin_appointmentmanager_availability', UPDATE) || $can_manage_all_avail;
 $is_admin             = $can_manage_techs;
 
