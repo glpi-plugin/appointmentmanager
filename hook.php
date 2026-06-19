@@ -93,6 +93,15 @@ function plugin_appointmentmanager_install() {
         );
     }
 
+    if (!$DB->fieldExists('glpi_plugin_appointmentmanager_appointments', 'is_requester_proposed')) {
+        $migration->addField(
+            'glpi_plugin_appointmentmanager_appointments',
+            'is_requester_proposed',
+            'bool',
+            ['value' => 0, 'after' => 'followup_id']
+        );
+    }
+
     if (!$DB->fieldExists('glpi_plugin_appointmentmanager_appointments', 'locations_id')) {
         $migration->addField(
             'glpi_plugin_appointmentmanager_appointments',

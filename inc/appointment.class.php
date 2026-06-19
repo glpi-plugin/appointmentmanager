@@ -151,23 +151,25 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         $date_start          = $input['date_start'] ?? '';
         $date_end            = $input['date_end'] ?? '';
         $locations_id        = (int)($input['locations_id'] ?? 0);
-        $comment             = strip_tags(trim($input['comment'] ?? ''));
-        $token               = self::generateToken();
-        $now                 = date('Y-m-d H:i:s');
+        $comment               = strip_tags(trim($input['comment'] ?? ''));
+        $is_requester_proposed = (int)($input['is_requester_proposed'] ?? 0);
+        $token                 = self::generateToken();
+        $now                   = date('Y-m-d H:i:s');
 
         $DB->insert('glpi_plugin_appointmentmanager_appointments', [
-            'tickets_id'          => $tickets_id,
-            'users_id_tech'       => $users_id_tech,
-            'users_id_requester'  => $users_id_requester,
-            'appointmenttypes_id' => $appointmenttypes_id,
-            'status'              => self::STATUS_PROPOSED,
-            'date_start'          => $date_start,
-            'date_end'            => $date_end,
-            'locations_id'        => $locations_id,
-            'comment'             => $comment,
-            'confirm_token'       => $token,
-            'date_creation'       => $now,
-            'date_mod'            => $now,
+            'tickets_id'           => $tickets_id,
+            'users_id_tech'        => $users_id_tech,
+            'users_id_requester'   => $users_id_requester,
+            'appointmenttypes_id'  => $appointmenttypes_id,
+            'status'               => self::STATUS_PROPOSED,
+            'date_start'           => $date_start,
+            'date_end'             => $date_end,
+            'locations_id'         => $locations_id,
+            'comment'              => $comment,
+            'confirm_token'        => $token,
+            'is_requester_proposed'=> $is_requester_proposed,
+            'date_creation'        => $now,
+            'date_mod'             => $now,
         ]);
 
         $id = $DB->insertId();
@@ -256,7 +258,12 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         $location_name  = $locations_id > 0 ? htmlspecialchars(Dropdown::getDropdownName('glpi_locations', $locations_id), ENT_QUOTES, 'UTF-8') : '';
         $comment        = htmlspecialchars($input['comment'] ?? '', ENT_QUOTES, 'UTF-8');
 
-        $content  = '<p>' . __('A new appointment has been proposed for this ticket.', 'appointmentmanager') . '</p>';
+        $is_req = !empty($input['is_requester_proposed']);
+        $intro  = $is_req
+            ? __('The requester has proposed a new appointment time. The assigned technician must confirm or decline.', 'appointmentmanager')
+            : __('A new appointment has been proposed for this ticket.', 'appointmentmanager');
+
+        $content  = '<p>' . $intro . '</p>';
         if ($type_name) {
             $content .= '<p><strong>' . __('Type', 'appointmentmanager') . ':</strong> ' . $type_name . '</p>';
         }
@@ -386,7 +393,12 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         $locations_id   = (int)($appt['locations_id'] ?? 0);
         $location_name  = $locations_id > 0 ? htmlspecialchars(Dropdown::getDropdownName('glpi_locations', $locations_id), ENT_QUOTES, 'UTF-8') : '';
 
-        $content  = '<p>' . __('A new appointment has been proposed for this ticket.', 'appointmentmanager') . '</p>';
+        $is_req = !empty($appt['is_requester_proposed']);
+        $intro  = $is_req
+            ? __('The requester has proposed a new appointment time. The assigned technician must confirm or decline.', 'appointmentmanager')
+            : __('A new appointment has been proposed for this ticket.', 'appointmentmanager');
+
+        $content  = '<p>' . $intro . '</p>';
         if ($type_name) {
             $content .= '<p><strong>' . __('Type', 'appointmentmanager') . ':</strong> ' . $type_name . '</p>';
         }

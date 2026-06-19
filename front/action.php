@@ -48,6 +48,19 @@ if ($appt['users_id_requester'] !== $current_user
     am_action_error(__('You are not allowed to act on this appointment.', 'appointmentmanager'), 'danger', $ticket_url);
 }
 
+// Requester cannot confirm an appointment they themselves proposed via reschedule
+if ($action === 'confirm'
+    && !$is_admin
+    && $current_user === (int)$appt['users_id_requester']
+    && !empty($appt['is_requester_proposed'])
+) {
+    am_action_error(
+        __('Only the assigned technician can confirm this appointment.', 'appointmentmanager'),
+        'warning',
+        $ticket_url
+    );
+}
+
 // Status guard: only proposed appointments can be actioned via token
 if ($appt['status'] !== PluginAppointmentmanagerAppointment::STATUS_PROPOSED) {
     $statuses  = PluginAppointmentmanagerAppointment::getAllStatuses();

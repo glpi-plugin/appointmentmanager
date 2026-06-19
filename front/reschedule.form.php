@@ -66,14 +66,15 @@ PluginAppointmentmanagerAppointment::replaceProposalButtons(
 );
 
 PluginAppointmentmanagerAppointment::create([
-    'tickets_id'          => (int)$appt['tickets_id'],
-    'users_id_tech'       => (int)$appt['users_id_tech'],
-    'users_id_requester'  => (int)$appt['users_id_requester'],
-    'appointmenttypes_id' => (int)$appt['appointmenttypes_id'],
-    'date_start'          => $dt_start->format('Y-m-d H:i:s'),
-    'date_end'            => $dt_end->format('Y-m-d H:i:s'),
-    'location'            => $appt['location'],
-    'comment'             => '',
+    'tickets_id'            => (int)$appt['tickets_id'],
+    'users_id_tech'         => (int)$appt['users_id_tech'],
+    'users_id_requester'    => (int)$appt['users_id_requester'],
+    'appointmenttypes_id'   => (int)$appt['appointmenttypes_id'],
+    'date_start'            => $dt_start->format('Y-m-d H:i:s'),
+    'date_end'              => $dt_end->format('Y-m-d H:i:s'),
+    'locations_id'          => (int)($appt['locations_id'] ?? 0),
+    'comment'               => '',
+    'is_requester_proposed' => 1,
 ]);
 
 Session::addMessageAfterRedirect(
