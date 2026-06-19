@@ -46,6 +46,14 @@ $events = [];
 
 // Appointment events
 foreach ($appointments as $appt) {
+    if (in_array($appt['status'], [
+        PluginAppointmentmanagerAppointment::STATUS_CANCELLED,
+        PluginAppointmentmanagerAppointment::STATUS_DECLINED,
+        PluginAppointmentmanagerAppointment::STATUS_RESCHEDULE_REQUESTED,
+    ], true)) {
+        continue;
+    }
+
     $type      = $type_by_id[(int)$appt['appointmenttypes_id']] ?? null;
     $color     = $type ? $type['color'] : '#0055a4';
     $type_name = $type ? $type['name']  : '';
@@ -55,17 +63,12 @@ foreach ($appointments as $appt) {
         $title = $type_name . ' – ' . __('Ticket', 'appointmentmanager') . ' #' . (int)$appt['tickets_id'];
     }
 
-    $opacity = in_array($appt['status'], [
-        PluginAppointmentmanagerAppointment::STATUS_CANCELLED,
-        PluginAppointmentmanagerAppointment::STATUS_DECLINED,
-    ], true) ? '66' : '';
-
     $events[] = [
         'id'        => (string)(int)$appt['id'],
         'title'     => $title,
         'start'     => str_replace(' ', 'T', $appt['date_start']),
         'end'       => str_replace(' ', 'T', $appt['date_end']),
-        'color'     => $color . $opacity,
+        'color'     => $color,
         'textColor' => '#ffffff',
         'extendedProps' => [
             'status'    => $appt['status'],
