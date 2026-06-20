@@ -74,7 +74,7 @@ PluginAppointmentmanagerAppointment::create([
     'date_end'              => $dt_end->format('Y-m-d H:i:s'),
     'locations_id'          => (int)($appt['locations_id'] ?? 0),
     'comment'               => '',
-    'is_requester_proposed' => 1,
+    'is_requester_proposed' => ($current_user === (int)$appt['users_id_requester']) ? 1 : 0,
 ]);
 
 Session::addMessageAfterRedirect(
