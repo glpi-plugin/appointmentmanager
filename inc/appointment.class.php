@@ -350,6 +350,10 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         if ($location_name) {
             $content .= '<p><strong>' . __('Location', 'appointmentmanager') . ':</strong> ' . $location_name . '</p>';
         }
+        $comment = htmlspecialchars($appt['comment'] ?? '', ENT_QUOTES, 'UTF-8');
+        if ($comment) {
+            $content .= '<p><strong>' . __('Comment', 'appointmentmanager') . ':</strong> ' . $comment . '</p>';
+        }
 
         $badge_class = self::getStatusBadgeClass($new_status);
         $statuses    = self::getAllStatuses();
