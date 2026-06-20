@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $token          = trim($_POST['token'] ?? '');
 $date_start_raw = trim($_POST['date_start'] ?? '');
 $date_end_raw   = trim($_POST['date_end'] ?? '');
+$comment        = strip_tags(trim($_POST['comment'] ?? ''));
 
 if (!preg_match('/^[0-9a-f]{64}$/', $token)) {
     Session::addMessageAfterRedirect(__('Invalid token.', 'appointmentmanager'), false, ERROR);
@@ -79,7 +80,7 @@ PluginAppointmentmanagerAppointment::create([
     'date_start'            => $dt_start->format('Y-m-d H:i:s'),
     'date_end'              => $dt_end->format('Y-m-d H:i:s'),
     'locations_id'          => (int)($appt['locations_id'] ?? 0),
-    'comment'               => '',
+    'comment'               => $comment,
     'is_requester_proposed' => ($current_user === (int)$appt['users_id_requester']) ? 1 : 0,
 ]);
 

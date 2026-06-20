@@ -127,6 +127,10 @@ if ($action === 'reschedule') {
     echo '<input type="datetime-local" id="amRescheduleStart" name="date_start" class="form-control" required></div>';
     echo '<div class="mb-3"><label class="form-label">' . __('Preferred end', 'appointmentmanager') . ' *</label>';
     echo '<input type="datetime-local" id="amRescheduleEnd" name="date_end" class="form-control" required></div>';
+    echo '<div class="mb-3"><label class="form-label">' . __('Comment', 'appointmentmanager') . '</label>';
+    echo '<textarea name="comment" class="form-control" rows="3" maxlength="1000" placeholder="'
+        . htmlspecialchars(__('Reason for the reschedule request (optional)', 'appointmentmanager'), ENT_QUOTES, 'UTF-8')
+        . '"></textarea></div>';
     echo '<button type="submit" class="btn btn-primary w-100">';
     echo '<i class="ti ti-calendar-event me-1"></i>' . __('Propose this time', 'appointmentmanager');
     echo '</button>';

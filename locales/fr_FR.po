@@ -478,3 +478,6 @@ msgstr "Seul le technicien assigné peut confirmer ou refuser ce rendez-vous."
 
 msgid "The requester has proposed a new appointment time. The assigned technician must confirm or decline."
 msgstr "Le demandeur a proposé un nouvel horaire de rendez-vous. Le technicien assigné doit confirmer ou refuser."
+
+msgid "Reason for the reschedule request (optional)"
+msgstr "Motif de la demande de report (facultatif)"
