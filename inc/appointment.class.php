@@ -490,11 +490,16 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
             $fc_loaded = true;
         }
 
-        echo '<button type="button" class="btn btn-sm btn-ghost-secondary"'
-            . ' data-bs-toggle="modal" data-bs-target="#' . $modal_id . '">'
-            . '<i class="ti ' . $btn_icon . ' me-1"></i>'
-            . $btn_label
-            . '</button>';
+        echo '<li>'
+            . '<button type="button"'
+            . ' class="btn btn-sm btn-ghost-secondary"'
+            . ' data-bs-toggle="modal"'
+            . ' data-bs-target="#' . $modal_id . '"'
+            . ' title="' . htmlspecialchars($btn_label, ENT_QUOTES, 'UTF-8') . '">'
+            . '<i class="ti ' . $btn_icon . '"></i>'
+            . '<span class="d-none d-lg-inline ms-1">' . $btn_label . '</span>'
+            . '</button>'
+            . '</li>';
 
         echo '<div class="modal fade" id="' . $modal_id . '" tabindex="-1" aria-hidden="true">';
         echo '<div class="modal-dialog modal-xl"><div class="modal-content">';
