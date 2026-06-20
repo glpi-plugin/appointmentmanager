@@ -4,15 +4,16 @@ include('../../../inc/includes.php');
 Session::checkLoginUser();
 header('Content-Type: application/json');
 
-if (!Session::haveRight('plugin_appointmentmanager_appointment', READ)) {
+$from     = trim($_GET['start'] ?? '');
+$to       = trim($_GET['end']   ?? '');
+$techs_id = (int)($_GET['techs_id'] ?? 0);
+
+$has_read = Session::haveRight('plugin_appointmentmanager_appointment', READ);
+if (!$has_read && $techs_id <= 0) {
     echo json_encode(['error' => 'Permission denied'], JSON_HEX_TAG | JSON_HEX_AMP);
     http_response_code(403);
     exit;
 }
-
-$from     = trim($_GET['start'] ?? '');
-$to       = trim($_GET['end']   ?? '');
-$techs_id = (int)($_GET['techs_id'] ?? 0);
 
 if (!$from || !$to) {
     echo json_encode(['error' => 'Missing start/end'], JSON_HEX_TAG | JSON_HEX_AMP);
@@ -28,14 +29,20 @@ $to   = str_replace('T', ' ', substr($to,   0, 19));
 $is_admin    = Session::haveRight('plugin_appointmentmanager_appointment', UPDATE) || Session::haveRight('config', UPDATE);
 $current_uid = (int)Session::getLoginUserID();
 
-// Non-admins viewing a specific other tech get anonymised busy blocks only.
-// Requesting all-techs (0) or own calendar → restrict to own data as before.
-$anonymize = false;
-if (!$is_admin) {
-    if ($techs_id === 0 || $techs_id === $current_uid) {
-        $techs_id = $current_uid;
-    } else {
-        $anonymize = true;
+// Users without READ right (e.g. requesters using the reschedule calendar) get
+// only anonymised busy blocks for the requested tech — no appointment details.
+if (!$has_read) {
+    $anonymize = true;
+} else {
+    // Non-admins viewing a specific other tech get anonymised busy blocks only.
+    // Requesting all-techs (0) or own calendar → restrict to own data as before.
+    $anonymize = false;
+    if (!$is_admin) {
+        if ($techs_id === 0 || $techs_id === $current_uid) {
+            $techs_id = $current_uid;
+        } else {
+            $anonymize = true;
+        }
     }
 }
 
