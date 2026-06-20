@@ -25,26 +25,29 @@ if ($error) {
     Html::redirect($integrations);
 }
 
-$session_data = $_SESSION['am_oauth'] ?? [];
-unset($_SESSION['am_oauth']);
+global $DB;
 
-if (
-    empty($session_data['state'])
-    || $session_data['state'] !== $state
-    || $session_data['provider'] !== $provider
-) {
+$users_id    = (int)Session::getLoginUserID();
+$pending_row = null;
+
+if ($state && in_array($provider, ['google', 'microsoft'], true)) {
+    $iter = $DB->request([
+        'FROM'  => 'glpi_plugin_appointmentmanager_oauth_pending',
+        'WHERE' => ['users_id' => $users_id, 'provider' => $provider, 'state' => $state],
+        'LIMIT' => 1,
+    ]);
+    $pending_row = $iter->count() > 0 ? $iter->current() : null;
+}
+
+$DB->delete('glpi_plugin_appointmentmanager_oauth_pending', ['users_id' => $users_id, 'provider' => $provider]);
+
+if (!$pending_row) {
     Session::addMessageAfterRedirect(__('Invalid OAuth state. Please try again.', 'appointmentmanager'), false, ERROR);
     Html::redirect($integrations);
 }
 
-if ((time() - ($session_data['ts'] ?? 0)) > 600) {
+if (strtotime($pending_row['expires_at']) < time()) {
     Session::addMessageAfterRedirect(__('OAuth session expired. Please try again.', 'appointmentmanager'), false, ERROR);
-    Html::redirect($integrations);
-}
-
-$users_id = (int)$session_data['users_id'];
-if ($users_id !== (int)Session::getLoginUserID()) {
-    Session::addMessageAfterRedirect(__('Session mismatch. Please try again.', 'appointmentmanager'), false, ERROR);
     Html::redirect($integrations);
 }
 

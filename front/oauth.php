@@ -26,13 +26,18 @@ if (!$settings) {
     exit;
 }
 
-$state = bin2hex(random_bytes(16));
-$_SESSION['am_oauth'] = [
-    'state'    => $state,
-    'provider' => $provider,
-    'users_id' => (int)Session::getLoginUserID(),
-    'ts'       => time(),
-];
+global $DB;
+
+$state    = bin2hex(random_bytes(16));
+$users_id = (int)Session::getLoginUserID();
+
+$DB->delete('glpi_plugin_appointmentmanager_oauth_pending', ['users_id' => $users_id, 'provider' => $provider]);
+$DB->insert('glpi_plugin_appointmentmanager_oauth_pending', [
+    'users_id'   => $users_id,
+    'provider'   => $provider,
+    'state'      => $state,
+    'expires_at' => date('Y-m-d H:i:s', time() + 600),
+]);
 
 $instance  = PluginAppointmentmanagerOAuthProvider::getProviderInstance($provider);
 $auth_url  = $instance->getAuthUrl($state);
