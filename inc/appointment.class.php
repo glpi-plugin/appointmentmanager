@@ -479,7 +479,7 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
 
         $modal_title  = $is_update ? __('Update appointment', 'appointmentmanager') : __('Propose appointment', 'appointmentmanager');
         $btn_label    = __('Appointment', 'appointmentmanager');
-        $btn_icon     = $is_update ? 'ti-calendar-edit' : 'ti-calendar-plus';
+        $btn_icon     = $is_update ? 'ti-calendar-event' : 'ti-calendar-plus';
         $submit_label = $is_update ? __('Update', 'appointmentmanager') : __('Propose', 'appointmentmanager');
 
         // Load FullCalendar CSS + JS once per page render
