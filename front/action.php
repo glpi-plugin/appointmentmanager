@@ -165,6 +165,16 @@ document.addEventListener("DOMContentLoaded", function() {
             startEl.value = toLocalInput(info.start);
             endEl.value   = toLocalInput(info.end);
         },
+        selectAllow: function(selectInfo) {
+            var events = calendar.getEvents();
+            for (var i = 0; i < events.length; i++) {
+                var ev = events[i];
+                if (ev.display === "background" && ev.start < selectInfo.end && ev.end > selectInfo.start) {
+                    return false;
+                }
+            }
+            return true;
+        },
         events: {
             url: ' . $j_events_url . ',
             method: "GET",
@@ -177,6 +187,13 @@ document.addEventListener("DOMContentLoaded", function() {
                           reschedule_requested: "🔄", cancelled: "🚫", completed: "🏁" };
             var icon = icons[arg.event.extendedProps.status || ""] || "";
             return { html: "<div style=\"white-space:normal;font-size:0.8em;padding:1px 3px\">" + icon + " " + arg.event.title + "</div>" };
+        },
+        eventDidMount: function(arg) {
+            if (arg.event.display !== "background") return;
+            var label = document.createElement("span");
+            label.textContent = arg.event.title || "Busy";
+            label.style.cssText = "font-size:0.7em;font-weight:600;color:rgba(0,0,0,0.45);padding:1px 4px;display:block;text-align:center;pointer-events:none;";
+            arg.el.appendChild(label);
         }
     });
     calendar.render();

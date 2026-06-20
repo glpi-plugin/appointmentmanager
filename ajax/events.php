@@ -75,10 +75,11 @@ foreach ($appointments as $appt) {
     if ($anonymize) {
         $events[] = [
             'id'      => 'busy_' . (int)$appt['id'],
+            'title'   => 'Busy',
             'start'   => str_replace(' ', 'T', $appt['date_start']),
             'end'     => str_replace(' ', 'T', $appt['date_end']),
             'display' => 'background',
-            'color'   => '#cccccc',
+            'color'   => '#fca5a5',
         ];
         continue;
     }
