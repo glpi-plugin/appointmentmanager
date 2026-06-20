@@ -349,12 +349,13 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         }
 
         $DB->update('glpi_plugin_appointmentmanager_appointments', [
-            'appointmenttypes_id' => (int)($input['appointmenttypes_id'] ?? $appt['appointmenttypes_id']),
-            'date_start'          => $input['date_start'],
-            'date_end'            => $input['date_end'],
-            'locations_id'        => (int)($input['locations_id'] ?? $appt['locations_id'] ?? 0),
-            'status'              => self::STATUS_PROPOSED,
-            'date_mod'            => date('Y-m-d H:i:s'),
+            'appointmenttypes_id'  => (int)($input['appointmenttypes_id'] ?? $appt['appointmenttypes_id']),
+            'date_start'           => $input['date_start'],
+            'date_end'             => $input['date_end'],
+            'locations_id'         => (int)($input['locations_id'] ?? $appt['locations_id'] ?? 0),
+            'status'               => self::STATUS_PROPOSED,
+            'is_requester_proposed'=> 0,
+            'date_mod'             => date('Y-m-d H:i:s'),
         ], ['id' => $id]);
 
         self::refreshProposalFollowup($id);
