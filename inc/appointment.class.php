@@ -493,8 +493,8 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         $btn_id = 'amProposeBtn' . $rand;
         echo '<button type="button"'
             . ' id="' . $btn_id . '"'
-            . ' class="btn btn-sm btn-primary ms-2"'
-            . ' style="background-color:var(--glpi-timeline-solution-bg,#9fd6ed);border-color:var(--glpi-timeline-solution-bg,#9fd6ed);color:var(--glpi-timeline-solution-fg,#27363b);"'
+            . ' class="btn btn-primary ms-2"'
+            . ' style="background-color:#80c9c9;border-color:#80c9c9;color:#1a4a4a;"'
             . ' data-bs-toggle="modal"'
             . ' data-bs-target="#' . $modal_id . '"'
             . ' title="' . htmlspecialchars($btn_label, ENT_QUOTES, 'UTF-8') . '">'
