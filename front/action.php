@@ -186,14 +186,17 @@ document.addEventListener("DOMContentLoaded", function() {
             var icons = { proposed: "⏳", confirmed: "✅", declined: "❌",
                           reschedule_requested: "🔄", cancelled: "🚫", completed: "🏁" };
             var icon = icons[arg.event.extendedProps.status || ""] || "";
-            return { html: "<div style=\"white-space:normal;font-size:0.8em;padding:1px 3px\">" + icon + " " + arg.event.title + "</div>" };
+            return { html: "<div style=\"white-space:normal;font-size:0.8em;padding:1px 3px;overflow:hidden\">" + icon + " " + arg.event.title + "</div>" };
         },
         eventDidMount: function(arg) {
-            if (arg.event.display !== "background") return;
-            var label = document.createElement("span");
-            label.textContent = arg.event.title || "Busy";
-            label.style.cssText = "font-size:0.7em;font-weight:600;color:rgba(0,0,0,0.45);padding:1px 4px;display:block;text-align:center;pointer-events:none;";
-            arg.el.appendChild(label);
+            if (arg.event.display === "background") {
+                var label = document.createElement("span");
+                label.textContent = arg.event.title || "Busy";
+                label.style.cssText = "font-size:0.7em;font-weight:600;color:rgba(0,0,0,0.45);padding:1px 4px;display:block;text-align:center;pointer-events:none;";
+                arg.el.appendChild(label);
+            } else {
+                arg.el.style.overflow = "hidden";
+            }
         }
     });
     calendar.render();

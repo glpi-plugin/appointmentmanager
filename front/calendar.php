@@ -151,7 +151,12 @@ document.addEventListener("DOMContentLoaded", function() {
             };
             var status = arg.event.extendedProps.status || "";
             var icon   = icons[status] || "";
-            return { html: "<div style=\"white-space:normal;font-size:0.8em;padding:1px 3px\">" + icon + " " + arg.event.title + "</div>" };
+            return { html: "<div style=\"white-space:normal;font-size:0.8em;padding:1px 3px;overflow:hidden\">" + icon + " " + arg.event.title + "</div>" };
+        },
+        eventDidMount: function(arg) {
+            if (arg.event.display !== "background") {
+                arg.el.style.overflow = "hidden";
+            }
         }
     });
 

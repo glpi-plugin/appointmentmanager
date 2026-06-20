@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Appointment Manager 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-18 00:00+0000\n"
-"PO-Revision-Date: 2026-06-18 00:00+0000\n"
+"PO-Revision-Date: 2026-06-19 00:00+0000\n"
 "Last-Translator: DSI\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -436,3 +436,45 @@ msgstr "par %s"
 
 msgid "Settings"
 msgstr "Paramètres"
+
+msgid "Comment"
+msgstr "Commentaire"
+
+msgid "Enroll myself"
+msgstr "M'inscrire"
+
+msgid "Unenroll myself"
+msgstr "Me désinscrire"
+
+msgid "My Technician Enrollment"
+msgstr "Mon inscription technicien"
+
+msgid "Manage technician enrollment"
+msgstr "Gérer l'inscription des techniciens"
+
+msgid "Use calendar integration"
+msgstr "Utiliser l'intégration du calendrier"
+
+msgid "You are currently enrolled for availability management."
+msgstr "Vous êtes actuellement inscrit pour la gestion des disponibilités."
+
+msgid "You are not enrolled. Enroll to make your availability visible for appointment scheduling."
+msgstr "Vous n'êtes pas inscrit. Inscrivez-vous pour rendre votre disponibilité visible pour la planification des rendez-vous."
+
+msgid "Remove yourself from availability management?"
+msgstr "Se retirer de la gestion des disponibilités ?"
+
+msgid "The selected time slot is outside the technician's availability hours."
+msgstr "Le créneau sélectionné est en dehors des heures de disponibilité du technicien."
+
+msgid "The technician already has an appointment during this time slot."
+msgstr "Le technicien a déjà un rendez-vous sur ce créneau horaire."
+
+msgid "Only the requester can confirm or decline an appointment proposed by the technician."
+msgstr "Seul le demandeur peut confirmer ou refuser un rendez-vous proposé par le technicien."
+
+msgid "Only the assigned technician can confirm or decline this appointment."
+msgstr "Seul le technicien assigné peut confirmer ou refuser ce rendez-vous."
+
+msgid "The requester has proposed a new appointment time. The assigned technician must confirm or decline."
+msgstr "Le demandeur a proposé un nouvel horaire de rendez-vous. Le technicien assigné doit confirmer ou refuser."
