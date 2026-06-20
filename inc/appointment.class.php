@@ -490,16 +490,17 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
             $fc_loaded = true;
         }
 
-        echo '<li>'
-            . '<button type="button"'
-            . ' class="btn btn-sm btn-ghost-secondary"'
+        $btn_id = 'amProposeBtn' . $rand;
+        echo '<button type="button"'
+            . ' id="' . $btn_id . '"'
+            . ' class="btn btn-sm btn-primary ms-2"'
+            . ' style="background-color:var(--tblr-purple,#ae3ec9);border-color:var(--tblr-purple,#ae3ec9);"'
             . ' data-bs-toggle="modal"'
             . ' data-bs-target="#' . $modal_id . '"'
             . ' title="' . htmlspecialchars($btn_label, ENT_QUOTES, 'UTF-8') . '">'
             . '<i class="ti ' . $btn_icon . '"></i>'
             . '<span class="d-none d-lg-inline ms-1">' . $btn_label . '</span>'
-            . '</button>'
-            . '</li>';
+            . '</button>';
 
         echo '<div class="modal fade" id="' . $modal_id . '" tabindex="-1" aria-hidden="true">';
         echo '<div class="modal-dialog modal-xl"><div class="modal-content">';
@@ -589,7 +590,12 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
 
         // Move the modal to <body> so Bootstrap's backdrop z-index works correctly.
         // When rendered inside GLPI's ticket <form>, the modal backdrop blocks interaction.
-        echo '<script>(function(){var m=document.getElementById("' . $modal_id . '");if(m)document.body.appendChild(m);})();</script>';
+        echo '<script>(function(){'
+            . 'var m=document.getElementById("' . $modal_id . '");if(m)document.body.appendChild(m);'
+            . 'var b=document.getElementById("' . $btn_id . '");'
+            . 'var ma=document.querySelector("#itil-footer .main-actions");'
+            . 'if(b&&ma){ma.appendChild(b);}'
+            . '})();</script>';
 
         // ── Mini-calendar initialization ──────────────────────────────────────
         $j_cal_id     = json_encode($cal_id,     JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
