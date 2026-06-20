@@ -48,24 +48,29 @@ if ($appt['users_id_requester'] !== $current_user
     am_action_error(__('You are not allowed to act on this appointment.', 'appointmentmanager'), 'danger', $ticket_url);
 }
 
-// Proposer cannot confirm or decline their own appointment.
-// Only a true super-admin (config UPDATE) may bypass this rule.
+// Only the intended recipient may confirm or decline.
+// Super-admins (config UPDATE) may override.
 if (in_array($action, ['confirm', 'decline'], true)
     && !Session::haveRight('config', UPDATE)
 ) {
-    if (empty($appt['is_requester_proposed']) && $current_user === (int)$appt['users_id_tech']) {
-        am_action_error(
-            __('Only the requester can confirm or decline an appointment proposed by the technician.', 'appointmentmanager'),
-            'warning',
-            $ticket_url
-        );
-    }
-    if (!empty($appt['is_requester_proposed']) && $current_user === (int)$appt['users_id_requester']) {
-        am_action_error(
-            __('Only the assigned technician can confirm or decline this appointment.', 'appointmentmanager'),
-            'warning',
-            $ticket_url
-        );
+    if (empty($appt['is_requester_proposed'])) {
+        // Tech proposed — only the requester may respond
+        if ($current_user !== (int)$appt['users_id_requester']) {
+            am_action_error(
+                __('Only the requester can confirm or decline an appointment proposed by the technician.', 'appointmentmanager'),
+                'warning',
+                $ticket_url
+            );
+        }
+    } else {
+        // Requester proposed — only the assigned tech may respond
+        if ($current_user !== (int)$appt['users_id_tech']) {
+            am_action_error(
+                __('Only the assigned technician can confirm or decline this appointment.', 'appointmentmanager'),
+                'warning',
+                $ticket_url
+            );
+        }
     }
 }
 
