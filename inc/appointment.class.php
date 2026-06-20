@@ -477,9 +477,9 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
             }
         }
 
-        $btn_label    = $is_update ? __('Update appointment', 'appointmentmanager') : __('Propose appointment', 'appointmentmanager');
+        $modal_title  = $is_update ? __('Update appointment', 'appointmentmanager') : __('Propose appointment', 'appointmentmanager');
+        $btn_label    = __('Appointment', 'appointmentmanager');
         $btn_icon     = $is_update ? 'ti-calendar-edit' : 'ti-calendar-plus';
-        $modal_title  = $btn_label;
         $submit_label = $is_update ? __('Update', 'appointmentmanager') : __('Propose', 'appointmentmanager');
 
         // Load FullCalendar CSS + JS once per page render
@@ -494,7 +494,7 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         echo '<button type="button"'
             . ' id="' . $btn_id . '"'
             . ' class="btn btn-sm btn-primary ms-2"'
-            . ' style="background-color:var(--tblr-purple,#ae3ec9);border-color:var(--tblr-purple,#ae3ec9);"'
+            . ' style="background-color:var(--glpi-timeline-solution-bg,#9fd6ed);border-color:var(--glpi-timeline-solution-bg,#9fd6ed);color:var(--glpi-timeline-solution-fg,#27363b);"'
             . ' data-bs-toggle="modal"'
             . ' data-bs-target="#' . $modal_id . '"'
             . ' title="' . htmlspecialchars($btn_label, ENT_QUOTES, 'UTF-8') . '">'
