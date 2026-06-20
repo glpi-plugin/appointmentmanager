@@ -62,13 +62,26 @@ if (!Session::haveRight('config', UPDATE)) {
 }
 
 if ($appointment_id > 0) {
-    // Update mode
     $existing = PluginAppointmentmanagerAppointment::getById($appointment_id);
     if (!$existing || (int)$existing['tickets_id'] !== $tickets_id) {
         Session::addMessageAfterRedirect(__('Invalid appointment.', 'appointmentmanager'), false, ERROR);
         Html::redirect(Ticket::getFormURLWithID($tickets_id));
     }
 
+    // If the appointment reached a terminal state since the page loaded (e.g. user
+    // declined while the modal was open), fall through to create a new proposal.
+    $updatable = [
+        PluginAppointmentmanagerAppointment::STATUS_PROPOSED,
+        PluginAppointmentmanagerAppointment::STATUS_CONFIRMED,
+        PluginAppointmentmanagerAppointment::STATUS_RESCHEDULE_REQUESTED,
+    ];
+    if (!in_array($existing['status'], $updatable, true)) {
+        $appointment_id = 0;
+    }
+}
+
+if ($appointment_id > 0) {
+    // Update mode
     PluginAppointmentmanagerAppointment::updateDetails($appointment_id, [
         'appointmenttypes_id' => $appointmenttypes_id,
         'date_start'          => $dt_start->format('Y-m-d H:i:s'),
