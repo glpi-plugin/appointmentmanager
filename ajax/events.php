@@ -20,6 +20,11 @@ if (!$from || !$to) {
     exit;
 }
 
+// FullCalendar sends ISO 8601 with local timezone offset (e.g. 2026-06-15T00:00:00+02:00).
+// MySQL DATETIME comparison is unreliable with timezone suffixes, so strip to plain datetime.
+$from = str_replace('T', ' ', substr($from, 0, 19));
+$to   = str_replace('T', ' ', substr($to,   0, 19));
+
 $is_admin    = Session::haveRight('plugin_appointmentmanager_appointment', UPDATE) || Session::haveRight('config', UPDATE);
 $current_uid = (int)Session::getLoginUserID();
 
