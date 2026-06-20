@@ -48,17 +48,25 @@ if ($appt['users_id_requester'] !== $current_user
     am_action_error(__('You are not allowed to act on this appointment.', 'appointmentmanager'), 'danger', $ticket_url);
 }
 
-// Requester cannot confirm an appointment they themselves proposed via reschedule
-if ($action === 'confirm'
-    && !$is_admin
-    && $current_user === (int)$appt['users_id_requester']
-    && !empty($appt['is_requester_proposed'])
+// Proposer cannot confirm or decline their own appointment.
+// Only a true super-admin (config UPDATE) may bypass this rule.
+if (in_array($action, ['confirm', 'decline'], true)
+    && !Session::haveRight('config', UPDATE)
 ) {
-    am_action_error(
-        __('Only the assigned technician can confirm this appointment.', 'appointmentmanager'),
-        'warning',
-        $ticket_url
-    );
+    if (empty($appt['is_requester_proposed']) && $current_user === (int)$appt['users_id_tech']) {
+        am_action_error(
+            __('Only the requester can confirm or decline an appointment proposed by the technician.', 'appointmentmanager'),
+            'warning',
+            $ticket_url
+        );
+    }
+    if (!empty($appt['is_requester_proposed']) && $current_user === (int)$appt['users_id_requester']) {
+        am_action_error(
+            __('Only the assigned technician can confirm or decline this appointment.', 'appointmentmanager'),
+            'warning',
+            $ticket_url
+        );
+    }
 }
 
 // Status guard: only proposed appointments can be actioned via token
