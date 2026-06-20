@@ -256,6 +256,16 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         return $appt['users_id_tech'] === $users_id;
     }
 
+    static function isEnrolled(int $users_id): bool {
+        global $DB;
+        $iter = $DB->request([
+            'FROM'  => 'glpi_plugin_appointmentmanager_enrolled',
+            'WHERE' => ['users_id' => $users_id],
+            'LIMIT' => 1,
+        ]);
+        return count($iter) > 0;
+    }
+
     static function postFollowupForCreation(int $appt_id, int $tickets_id, string $token, array $input): void {
         global $CFG_GLPI, $DB;
 

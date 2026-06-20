@@ -13,7 +13,9 @@ $tickets_id = (int)($_GET['tickets_id'] ?? 0);
 $date_start = $_GET['date_start'] ?? '';
 
 $is_view   = $id > 0;
-$can_write = Session::haveRight('plugin_appointmentmanager_appointment', CREATE);
+$can_write = Session::haveRight('plugin_appointmentmanager_appointment', CREATE)
+    && (Session::haveRight('config', UPDATE)
+        || PluginAppointmentmanagerAppointment::isEnrolled((int)Session::getLoginUserID()));
 
 $appt  = null;
 $ticket = null;

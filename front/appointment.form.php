@@ -55,6 +55,15 @@ if ($dt_end <= new DateTime()) {
 
 $tech_id = (int)Session::getLoginUserID();
 
+if (!Session::haveRight('config', UPDATE) && !PluginAppointmentmanagerAppointment::isEnrolled($tech_id)) {
+    Session::addMessageAfterRedirect(
+        __('You are not enrolled in the appointment system.', 'appointmentmanager'),
+        false,
+        ERROR
+    );
+    Html::redirect(Ticket::getFormURLWithID($tickets_id));
+}
+
 if (!Session::haveRight('config', UPDATE)) {
     if (!PluginAppointmentmanagerAvailability::isRangeAvailable($tech_id, $dt_start, $dt_end)) {
         Session::addMessageAfterRedirect(__('The selected time slot is outside the technician\'s availability hours.', 'appointmentmanager'), false, ERROR);
