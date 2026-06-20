@@ -1,0 +1,19 @@
+# Claude
+CLAUDE.md
+
+# Composer
+/vendor/
+composer.lock
+
+# Compiled locales
+locales/*.mo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

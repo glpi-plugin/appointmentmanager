@@ -137,7 +137,9 @@ class PluginAppointmentmanagerAvailability {
     }
 
     static function validateTime(string $t): bool {
-        return (bool)preg_match('/^\d{2}:\d{2}(:\d{2})?$/', $t);
+        $fmt = strlen($t) > 5 ? 'H:i:s' : 'H:i';
+        $dt  = DateTime::createFromFormat($fmt, $t);
+        return $dt !== false && $dt->format($fmt) === $t;
     }
 
     static function getDefaultGrid(): array {

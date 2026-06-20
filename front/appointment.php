@@ -124,7 +124,7 @@ if ($is_view && $appt) {
             echo '</form>';
         }
         echo '<form method="POST" action="' . htmlspecialchars($plugin_url . '/ajax/appointment.php', ENT_QUOTES, 'UTF-8') . '" class="d-inline"'
-            . ' onsubmit="return confirm(\'' . addslashes(__('Cancel this appointment?', 'appointmentmanager')) . '\')">';
+            . ' onsubmit="return confirm(' . json_encode(__('Cancel this appointment?', 'appointmentmanager')) . ')">';
         echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
         echo Html::hidden('action', ['value' => 'cancel']);
         echo Html::hidden('id', ['value' => (int)$appt['id']]);

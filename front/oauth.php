@@ -31,6 +31,7 @@ $_SESSION['am_oauth'] = [
     'state'    => $state,
     'provider' => $provider,
     'users_id' => (int)Session::getLoginUserID(),
+    'ts'       => time(),
 ];
 
 $instance  = PluginAppointmentmanagerOAuthProvider::getProviderInstance($provider);

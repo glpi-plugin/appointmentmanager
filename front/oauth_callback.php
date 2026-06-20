@@ -37,6 +37,11 @@ if (
     Html::redirect($integrations);
 }
 
+if ((time() - ($session_data['ts'] ?? 0)) > 600) {
+    Session::addMessageAfterRedirect(__('OAuth session expired. Please try again.', 'appointmentmanager'), false, ERROR);
+    Html::redirect($integrations);
+}
+
 $users_id = (int)$session_data['users_id'];
 if ($users_id !== (int)Session::getLoginUserID()) {
     Session::addMessageAfterRedirect(__('Session mismatch. Please try again.', 'appointmentmanager'), false, ERROR);

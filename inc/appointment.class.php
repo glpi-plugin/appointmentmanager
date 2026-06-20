@@ -404,6 +404,35 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         return true;
     }
 
+    static function postFollowupForAction(int $appt_id, int $tickets_id, string $status, int $acting_users_id): void {
+        $appt = self::getById($appt_id);
+        if (!$appt) {
+            return;
+        }
+
+        $badge_class    = self::getStatusBadgeClass($status);
+        $statuses       = self::getAllStatuses();
+        $label          = htmlspecialchars($statuses[$status] ?? $status, ENT_QUOTES, 'UTF-8');
+        $user_name      = htmlspecialchars(User::getFriendlyNameById($acting_users_id), ENT_QUOTES, 'UTF-8');
+        $date_start_fmt = Html::convDateTime($appt['date_start']);
+        $date_end_fmt   = Html::convDateTime($appt['date_end']);
+
+        $content  = '<p><span class="badge ' . $badge_class . '">' . $label . '</span> '
+                  . sprintf(__('by %s', 'appointmentmanager'), $user_name) . '</p>';
+        $content .= '<p><strong>' . __('Start', 'appointmentmanager') . ':</strong> ' . $date_start_fmt . '</p>';
+        $content .= '<p><strong>' . __('End', 'appointmentmanager') . ':</strong> ' . $date_end_fmt . '</p>';
+
+        $followup = new ITILFollowup();
+        $followup->add([
+            'itemtype'        => 'Ticket',
+            'items_id'        => $tickets_id,
+            'users_id'        => $acting_users_id,
+            'content'         => $content,
+            'is_private'      => 0,
+            'requesttypes_id' => 0,
+        ]);
+    }
+
     static function refreshProposalFollowup(int $appt_id): void {
         global $DB, $CFG_GLPI;
 

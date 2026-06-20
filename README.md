@@ -134,7 +134,7 @@ If you want to sync appointments with Google Calendar or Microsoft Outlook:
    - **Start/End dates and times**
    - **Reason** (e.g., "PTO", "Training", optional)
 4. Click **Save**
-4. Blocked periods appear on the mini calendar for all technicians viewing appointments
+5. Blocked periods appear on the mini calendar for all technicians viewing appointments
 
 ## Security Notes
 
@@ -150,11 +150,12 @@ If you want to sync appointments with Google Calendar or Microsoft Outlook:
 | Table | Purpose |
 |-------|---------|
 | `glpi_plugin_appointmentmanager_appointments` | Appointment records (ticket, tech, dates, type, status) |
-| `glpi_plugin_appointmentmanager_types` | Appointment type definitions (name, color, active) |
+| `glpi_plugin_appointmentmanager_appointmenttypes` | Appointment type definitions (name, color, icon, active) |
 | `glpi_plugin_appointmentmanager_availability` | Weekly availability windows per technician |
-| `glpi_plugin_appointmentmanager_blocked_periods` | Blocked time ranges per technician |
+| `glpi_plugin_appointmentmanager_blockedperiods` | Blocked time ranges per technician |
+| `glpi_plugin_appointmentmanager_enrolled` | Technicians enrolled in the appointment system |
 | `glpi_plugin_appointmentmanager_oauth_settings` | OAuth credentials per provider (Google, Microsoft) |
-| `glpi_plugin_appointmentmanager_oauth_tokens` | User auth tokens per provider (encrypted access/refresh tokens) |
+| `glpi_plugin_appointmentmanager_oauth_tokens` | User auth tokens per provider (access/refresh tokens) |
 | `glpi_plugin_appointmentmanager_external_events` | External calendar event ID mapping (for sync tracking) |
 
 ## Troubleshooting
@@ -206,7 +207,10 @@ appointmentmanager/
 │   ├── oauth.php                    # OAuth authorization redirect
 │   └── oauth_callback.php           # OAuth callback (state validation, token exchange)
 ├── ajax/
-│   └── events.php                   # FullCalendar event endpoint
+│   ├── events.php                   # FullCalendar event endpoint
+│   ├── appointment.php              # Complete/cancel appointment actions
+│   ├── appointmenttype.php          # Appointment type CRUD
+│   └── availability.php             # Availability save endpoint
 ├── locales/
 │   └── [locale].po / .mo            # Translation files
 └── README.md
@@ -232,7 +236,7 @@ No automated test suite. Testing is manual via a GLPI instance:
 
 ## License
 
-[Specify your license here, e.g., GPL-3.0]
+GPL-2.0-or-later
 
 ## Support
 
