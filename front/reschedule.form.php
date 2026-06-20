@@ -45,12 +45,18 @@ if (!$dt_start || !$dt_end || $dt_end <= $dt_start || $dt_end <= new DateTime())
     Html::redirect($ticket_url);
 }
 
+$tech_id = (int)$appt['users_id_tech'];
+
 if (!Session::haveRight('config', UPDATE)) {
-    $tech_id = (int)$appt['users_id_tech'];
     if (!PluginAppointmentmanagerAvailability::isRangeAvailable($tech_id, $dt_start, $dt_end)) {
         Session::addMessageAfterRedirect(__('The selected time slot is outside the technician\'s availability hours.', 'appointmentmanager'), false, ERROR);
         Html::redirect($plugin_url . '/front/action.php?token=' . urlencode($token) . '&action=reschedule');
     }
+}
+
+if (PluginAppointmentmanagerAppointment::hasTechConflict($tech_id, $dt_start, $dt_end, (int)$appt['id'])) {
+    Session::addMessageAfterRedirect(__('The technician already has an appointment during this time slot.', 'appointmentmanager'), false, ERROR);
+    Html::redirect($plugin_url . '/front/action.php?token=' . urlencode($token) . '&action=reschedule');
 }
 
 PluginAppointmentmanagerAppointment::updateStatus(

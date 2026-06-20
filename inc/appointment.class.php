@@ -122,6 +122,27 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         return $rows;
     }
 
+    static function hasTechConflict(int $tech_id, \DateTime $dt_start, \DateTime $dt_end, int $exclude_id = 0): bool {
+        global $DB;
+
+        $where = [
+            'users_id_tech' => $tech_id,
+            'date_start'    => ['<', $dt_end->format('Y-m-d H:i:s')],
+            'date_end'      => ['>', $dt_start->format('Y-m-d H:i:s')],
+            'status'        => [self::STATUS_PROPOSED, self::STATUS_CONFIRMED],
+        ];
+        if ($exclude_id > 0) {
+            $where['NOT'] = ['id' => $exclude_id];
+        }
+
+        $iter = $DB->request([
+            'FROM'  => 'glpi_plugin_appointmentmanager_appointments',
+            'WHERE' => $where,
+            'LIMIT' => 1,
+        ]);
+        return $iter->count() > 0;
+    }
+
     static function getAll(string $from, string $to): array {
         global $DB;
 

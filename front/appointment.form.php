@@ -53,12 +53,18 @@ if ($dt_end <= new DateTime()) {
     Html::redirect($plugin_url . '/front/appointment.php?tickets_id=' . $tickets_id);
 }
 
+$tech_id = (int)Session::getLoginUserID();
+
 if (!Session::haveRight('config', UPDATE)) {
-    $tech_id = (int)Session::getLoginUserID();
     if (!PluginAppointmentmanagerAvailability::isRangeAvailable($tech_id, $dt_start, $dt_end)) {
         Session::addMessageAfterRedirect(__('The selected time slot is outside the technician\'s availability hours.', 'appointmentmanager'), false, ERROR);
         Html::redirect($plugin_url . '/front/appointment.php?tickets_id=' . $tickets_id);
     }
+}
+
+if (PluginAppointmentmanagerAppointment::hasTechConflict($tech_id, $dt_start, $dt_end, $appointment_id)) {
+    Session::addMessageAfterRedirect(__('The technician already has an appointment during this time slot.', 'appointmentmanager'), false, ERROR);
+    Html::redirect($plugin_url . '/front/appointment.php?tickets_id=' . $tickets_id);
 }
 
 if ($appointment_id > 0) {
