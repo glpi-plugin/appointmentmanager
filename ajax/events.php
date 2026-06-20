@@ -28,9 +28,15 @@ $to   = str_replace('T', ' ', substr($to,   0, 19));
 $is_admin    = Session::haveRight('plugin_appointmentmanager_appointment', UPDATE) || Session::haveRight('config', UPDATE);
 $current_uid = (int)Session::getLoginUserID();
 
-// Non-admins can only see their own appointments
+// Non-admins viewing a specific other tech get anonymised busy blocks only.
+// Requesting all-techs (0) or own calendar → restrict to own data as before.
+$anonymize = false;
 if (!$is_admin) {
-    $techs_id = $current_uid;
+    if ($techs_id === 0 || $techs_id === $current_uid) {
+        $techs_id = $current_uid;
+    } else {
+        $anonymize = true;
+    }
 }
 
 // Fetch appointments
@@ -56,6 +62,17 @@ foreach ($appointments as $appt) {
         PluginAppointmentmanagerAppointment::STATUS_DECLINED,
         PluginAppointmentmanagerAppointment::STATUS_RESCHEDULE_REQUESTED,
     ], true)) {
+        continue;
+    }
+
+    if ($anonymize) {
+        $events[] = [
+            'id'      => 'busy_' . (int)$appt['id'],
+            'start'   => str_replace(' ', 'T', $appt['date_start']),
+            'end'     => str_replace(' ', 'T', $appt['date_end']),
+            'display' => 'background',
+            'color'   => '#cccccc',
+        ];
         continue;
     }
 
@@ -89,7 +106,7 @@ if ($techs_id > 0) {
     foreach ($blocked as $bp) {
         $events[] = [
             'id'      => 'bp_' . (int)$bp['id'],
-            'title'   => $bp['reason'] ?: __('Unavailable', 'appointmentmanager'),
+            'title'   => $anonymize ? __('Unavailable', 'appointmentmanager') : ($bp['reason'] ?: __('Unavailable', 'appointmentmanager')),
             'start'   => str_replace(' ', 'T', $bp['date_start']),
             'end'     => str_replace(' ', 'T', $bp['date_end']),
             'display' => 'background',
