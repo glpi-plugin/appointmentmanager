@@ -139,7 +139,7 @@ foreach ($bp_uids as $bp_uid) {
 // Always include the logged-in user's own external calendar so their events show
 // regardless of which tech is selected. Also include the selected tech's calendar
 // if it belongs to a different user.
-$ext_uids = array_unique(array_filter([$current_uid, $techs_id > 0 ? $techs_id : 0]));
+$ext_uids = $techs_id > 0 ? [$techs_id] : [$current_uid];
 foreach ($ext_uids as $uid) {
     $busy_slots = PluginAppointmentmanagerCalendarSync::fetchExternalBusySlots($uid, $from, $to, $from_raw, $to_raw);
     foreach ($busy_slots as $slot) {
