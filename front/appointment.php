@@ -89,6 +89,9 @@ if ($is_view && $appt) {
     if ($type) {
         echo '<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:'
             . htmlspecialchars($type['color'], ENT_QUOTES, 'UTF-8') . ';margin-right:6px"></span>';
+        if (!empty($type['icon'])) {
+            echo '<i class="' . htmlspecialchars($type['icon'], ENT_QUOTES, 'UTF-8') . ' me-1"></i>';
+        }
         echo htmlspecialchars($type['name'], ENT_QUOTES, 'UTF-8');
     }
     echo '</dd>';
@@ -208,8 +211,11 @@ if ($tickets_id > 0) {
             echo '<td>';
             if ($type_row) {
                 echo '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'
-                    . htmlspecialchars($type_row['color'], ENT_QUOTES, 'UTF-8') . ';margin-right:5px"></span>'
-                    . htmlspecialchars($type_row['name'], ENT_QUOTES, 'UTF-8');
+                    . htmlspecialchars($type_row['color'], ENT_QUOTES, 'UTF-8') . ';margin-right:5px"></span>';
+                if (!empty($type_row['icon'])) {
+                    echo '<i class="' . htmlspecialchars($type_row['icon'], ENT_QUOTES, 'UTF-8') . ' me-1"></i>';
+                }
+                echo htmlspecialchars($type_row['name'], ENT_QUOTES, 'UTF-8');
             }
             echo '</td>';
             echo '<td>' . Html::convDateTime($pa['date_start']) . '</td>';

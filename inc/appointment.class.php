@@ -690,10 +690,11 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         },
         eventContent: function(arg) {
             if (arg.event.display === "background") return;
-            var icons = { proposed: "⏳", confirmed: "✅", declined: "❌",
-                          reschedule_requested: "🔄", cancelled: "🚫", completed: "🏁" };
-            var icon = icons[arg.event.extendedProps.status || ""] || "";
-            return { html: "<div style=\"white-space:normal;font-size:0.8em;padding:1px 3px;overflow:hidden\">" + icon + " " + arg.event.title + "</div>" };
+            var statusIcons = { proposed: "⏳", confirmed: "✅", declined: "❌",
+                                reschedule_requested: "🔄", cancelled: "🚫", completed: "🏁" };
+            var statusIcon = statusIcons[arg.event.extendedProps.status || ""] || "";
+            var typeIcon   = arg.event.extendedProps.icon ? '<i class="' + arg.event.extendedProps.icon + '" style="margin-right:2px"></i>' : "";
+            return { html: "<div style=\"white-space:normal;font-size:0.8em;padding:1px 3px;overflow:hidden\">" + statusIcon + " " + typeIcon + arg.event.title + "</div>" };
         },
         eventDidMount: function(arg) {
             if (arg.event.display === "background") {

@@ -105,6 +105,7 @@ foreach ($appointments as $appt) {
             'status'    => $appt['status'],
             'ticket_id' => (int)$appt['tickets_id'],
             'type'      => $type_name,
+            'icon'      => $type ? $type['icon'] : '',
         ],
     ];
 }
