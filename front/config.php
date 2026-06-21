@@ -708,7 +708,8 @@ if ($tab === 'integrations') {
                 . ' value="' . htmlspecialchars($s['client_id'] ?? '', ENT_QUOTES, 'UTF-8') . '"></div>';
             echo '<div class="mb-2"><label class="form-label form-label-sm">Client Secret</label>';
             echo '<input type="password" name="' . $prov_key . '_client_secret" class="form-control form-control-sm"'
-                . ' value="' . htmlspecialchars($s['client_secret'] ?? '', ENT_QUOTES, 'UTF-8') . '"></div>';
+                . (!empty($s['client_secret']) ? ' placeholder="' . __('Unchanged — leave blank to keep', 'appointmentmanager') . '"' : '')
+                . '></div>';
             if ($prov_key === 'microsoft') {
                 echo '<div class="mb-2"><label class="form-label form-label-sm">Tenant ID</label>';
                 echo '<input type="text" name="microsoft_tenant_id" class="form-control form-control-sm"'

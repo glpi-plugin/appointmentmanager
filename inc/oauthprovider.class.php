@@ -58,9 +58,15 @@ abstract class PluginAppointmentmanagerOAuthProvider {
             'LIMIT' => 1,
         ]);
 
+        $new_secret = trim($data['client_secret'] ?? '');
+        // Preserve the stored secret when the field is submitted empty
+        if ($new_secret === '' && $existing->count() > 0) {
+            $new_secret = $existing->current()['client_secret'] ?? '';
+        }
+
         $payload = [
             'client_id'     => trim($data['client_id']     ?? ''),
-            'client_secret' => trim($data['client_secret'] ?? ''),
+            'client_secret' => $new_secret,
             'tenant_id'     => trim($data['tenant_id']     ?? 'common') ?: 'common',
             'is_enabled'    => empty($data['client_id']) ? 0 : 1,
             'date_mod'      => date('Y-m-d H:i:s'),

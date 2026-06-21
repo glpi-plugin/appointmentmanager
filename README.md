@@ -15,6 +15,7 @@ A comprehensive GLPI plugin for scheduling, managing, and synchronizing technici
 - **Weekly Availability**: Technicians define recurring weekly availability windows
 - **Permission Control**: Fine-grained role-based access via GLPI profiles
 - **Smart Notifications**: Follow-up posts with action buttons for confirming, declining, or rescheduling
+- **Add to Calendar**: Confirmed appointments include a one-click ICS download link, compatible with Outlook, Apple Calendar, Google Calendar, and any standards-compliant calendar app
 
 ## Requirements
 
@@ -104,6 +105,7 @@ If you want to sync appointments with Google Calendar or Microsoft Outlook:
 - **Confirm**: Requester/tech clicks the "Confirm" button in the follow-up
   - Appointment status changes to "Confirmed"
   - Button is removed (cannot confirm twice)
+  - An **"Add to my calendar"** button appears — clicking it downloads an `.ics` file with the appointment details and a direct link back to the GLPI ticket
 - **Decline**: Requester/tech clicks "Decline"
   - Appointment status changes to "Declined"
   - Tech can propose a new one
@@ -138,12 +140,13 @@ If you want to sync appointments with Google Calendar or Microsoft Outlook:
 
 ## Security Notes
 
-- **OAuth tokens** are encrypted and stored in the database; never exposed in logs
+- **OAuth tokens** are stored in the database; client secrets are never rendered back into forms (the field is blank on re-visit — enter a new value only to change it)
 - **CSRF protection** is enabled by default (GLPI framework auto-validates all POST requests)
 - **Permissions** are enforced at the profile level; users cannot see appointments outside their visibility scope
 - **URL escaping** is applied to all user-supplied data in HTML contexts
 - **SQL queries** use parameterized queries via GLPI's `$DB->request()` API
-- **Calendar integrations** use OAuth 2.0 with state validation; external API failures never break the main GLPI flow
+- **Calendar integrations** use OAuth 2.0 with state validation; external API failures (4xx/5xx) are logged and never break the main GLPI flow
+- **ICS downloads** are token-gated and require an active GLPI session
 
 ## Database Schema
 
@@ -201,8 +204,9 @@ appointmentmanager/
 │   └── profile.class.php            # Permission/rights integration
 ├── front/
 │   ├── appointment.form.php         # Appointment create/update form
-│   ├── action.php                   # Public token-based actions (confirm/decline)
-│   ├── reschedule.form.php          # Reschedule calendar flow
+│   ├── action.php                   # Token-based actions (confirm/decline/reschedule calendar)
+│   ├── ics.php                      # ICS calendar file download (token-gated)
+│   ├── reschedule.form.php          # Reschedule form submission handler
 │   ├── config.php                   # Admin config UI (types, availability, sync)
 │   ├── oauth.php                    # OAuth authorization redirect
 │   └── oauth_callback.php           # OAuth callback (state validation, token exchange)

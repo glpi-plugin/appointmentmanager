@@ -439,3 +439,6 @@ msgstr "Name is required."
 
 msgid "Add to my calendar"
 msgstr "Add to my calendar"
+
+msgid "Unchanged — leave blank to keep"
+msgstr "Unchanged — leave blank to keep"

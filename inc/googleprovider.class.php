@@ -84,16 +84,22 @@ class PluginAppointmentmanagerGoogleProvider extends PluginAppointmentmanagerOAu
     }
 
     public function updateEvent(string $access_token, string $event_id, array $event_data): void {
-        $this->jsonRequest('PATCH', self::EVENTS_URL . '/' . urlencode($event_id),
+        $result = $this->jsonRequest('PATCH', self::EVENTS_URL . '/' . urlencode($event_id),
             ['Authorization: Bearer ' . $access_token],
             $event_data
         );
+        if ($result['status'] < 200 || $result['status'] >= 300) {
+            throw new RuntimeException('Google updateEvent failed (HTTP ' . $result['status'] . ')');
+        }
     }
 
     public function deleteEvent(string $access_token, string $event_id): void {
-        $this->httpRequest('DELETE', self::EVENTS_URL . '/' . urlencode($event_id),
+        $result = $this->httpRequest('DELETE', self::EVENTS_URL . '/' . urlencode($event_id),
             ['Authorization: Bearer ' . $access_token]
         );
+        if ($result['status'] < 200 || $result['status'] >= 300) {
+            throw new RuntimeException('Google deleteEvent failed (HTTP ' . $result['status'] . ')');
+        }
     }
 
     public function fetchEvents(string $access_token, string $from, string $to, string $from_raw = '', string $to_raw = ''): array {
@@ -105,6 +111,9 @@ class PluginAppointmentmanagerGoogleProvider extends PluginAppointmentmanagerOAu
             'maxResults'   => 250,
         ]);
         $result = $this->httpRequest('GET', $url, ['Authorization: Bearer ' . $access_token]);
+        if ($result['status'] < 200 || $result['status'] >= 300) {
+            throw new RuntimeException('Google fetchEvents failed (HTTP ' . $result['status'] . ')');
+        }
         $data   = json_decode($result['body'], true) ?? [];
 
         $slots = [];

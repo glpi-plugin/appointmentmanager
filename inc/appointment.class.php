@@ -240,14 +240,6 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         return in_array($to, $allowed[$from] ?? [], true);
     }
 
-    static function userCanActOnToken(int $appointment_id, int $users_id): bool {
-        $appt = self::getById($appointment_id);
-        if (!$appt) {
-            return false;
-        }
-        return $appt['users_id_requester'] === $users_id;
-    }
-
     static function techOwns(int $appointment_id, int $users_id): bool {
         $appt = self::getById($appointment_id);
         if (!$appt) {
@@ -330,8 +322,23 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         }
     }
 
+    private static function icsLinkHtml(array $appt): string {
+        global $CFG_GLPI;
+        if (empty($appt['confirm_token'])) {
+            return '';
+        }
+        $url = rtrim($CFG_GLPI['url_base'] ?? '', '/')
+             . '/plugins/appointmentmanager/front/ics.php?token='
+             . urlencode($appt['confirm_token']);
+        return '<p><a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8')
+             . '" class="btn btn-sm btn-outline-secondary mt-1">'
+             . '<i class="ti ti-calendar-download me-1"></i>'
+             . __('Add to my calendar', 'appointmentmanager')
+             . '</a></p>';
+    }
+
     static function replaceProposalButtons(int $appt_id, string $new_status, int $acting_users_id): void {
-        global $DB;
+        global $DB, $CFG_GLPI;
 
         $appt = self::getById($appt_id);
         if (!$appt || empty($appt['followup_id'])) {
@@ -372,15 +379,8 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         $content .= '<p><span class="badge ' . $badge_class . '">' . $label . '</span> '
                   . sprintf(__('by %s', 'appointmentmanager'), $user_name) . '</p>';
 
-        if ($new_status === self::STATUS_CONFIRMED && !empty($appt['confirm_token'])) {
-            global $CFG_GLPI;
-            $ics_url  = rtrim($CFG_GLPI['url_base'] ?? '', '/')
-                      . '/plugins/appointmentmanager/front/ics.php?token='
-                      . urlencode($appt['confirm_token']);
-            $content .= '<p><a href="' . htmlspecialchars($ics_url, ENT_QUOTES, 'UTF-8') . '" style="font-size:0.9em;">'
-                      . '<i class="ti ti-calendar-download me-1"></i>'
-                      . __('Add to my calendar', 'appointmentmanager')
-                      . '</a></p>';
+        if ($new_status === self::STATUS_CONFIRMED) {
+            $content .= self::icsLinkHtml($appt);
         }
 
         $DB->update('glpi_itilfollowups', ['content' => $content], ['id' => $fu_id]);
@@ -433,15 +433,8 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         $content .= '<p><strong>' . __('Start', 'appointmentmanager') . ':</strong> ' . $date_start_fmt . '</p>';
         $content .= '<p><strong>' . __('End', 'appointmentmanager') . ':</strong> ' . $date_end_fmt . '</p>';
 
-        if ($status === self::STATUS_CONFIRMED && !empty($appt['confirm_token'])) {
-            global $CFG_GLPI;
-            $ics_url  = rtrim($CFG_GLPI['url_base'] ?? '', '/')
-                      . '/plugins/appointmentmanager/front/ics.php?token='
-                      . urlencode($appt['confirm_token']);
-            $content .= '<p><a href="' . htmlspecialchars($ics_url, ENT_QUOTES, 'UTF-8') . '" style="font-size:0.9em;">'
-                      . '<i class="ti ti-calendar-download me-1"></i>'
-                      . __('Add to my calendar', 'appointmentmanager')
-                      . '</a></p>';
+        if ($status === self::STATUS_CONFIRMED) {
+            $content .= self::icsLinkHtml($appt);
         }
 
         $followup = new ITILFollowup();

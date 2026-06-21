@@ -26,24 +26,35 @@ $locations_id  = (int)($appt['locations_id'] ?? 0);
 $location_name = $locations_id > 0 ? Dropdown::getDropdownName('glpi_locations', $locations_id) : '';
 $comment       = strip_tags($appt['comment'] ?? '');
 
+$ticket_url = rtrim($CFG_GLPI['url_base'] ?? '', '/') . '/front/ticket.form.php?id=' . (int)$appt['tickets_id'];
+
+$description = $comment;
+if ($description) {
+    $description .= "\n\n";
+}
+$description .= __('Ticket', 'appointmentmanager') . ': ' . $ticket_url;
+
 // GLPI stores datetimes as UTC
 $dtstart = gmdate('Ymd\THis\Z', strtotime($appt['date_start']));
 $dtend   = gmdate('Ymd\THis\Z', strtotime($appt['date_end']));
 $dtstamp = gmdate('Ymd\THis\Z');
 $uid     = 'appt-' . $appt['id'] . '@' . (parse_url($CFG_GLPI['url_base'] ?? '', PHP_URL_HOST) ?: 'glpi');
 
-function am_ics_escape(string $s): string {
+// RFC 5545 helpers as closures (avoids global function name collision)
+$icsEscape = function(string $s): string {
     return str_replace(['\\', ';', ',', "\n", "\r"], ['\\\\', '\;', '\,', '\n', ''], $s);
-}
-
-$base       = rtrim($CFG_GLPI['url_base'] ?? '', '/');
-$ticket_url = $base . '/front/ticket.form.php?id=' . (int)$appt['tickets_id'];
-
-$description = $comment;
-if ($description) {
-    $description .= '\n\n';
-}
-$description .= __('Ticket', 'appointmentmanager') . ': ' . $ticket_url;
+};
+$icsFold = function(string $line): string {
+    if (strlen($line) <= 75) {
+        return $line;
+    }
+    $out = '';
+    while (strlen($line) > 75) {
+        $out  .= substr($line, 0, 75) . "\r\n ";
+        $line  = substr($line, 75);
+    }
+    return $out . $line;
+};
 
 $lines = [
     'BEGIN:VCALENDAR',
@@ -55,18 +66,18 @@ $lines = [
     'DTSTAMP:' . $dtstamp,
     'DTSTART:' . $dtstart,
     'DTEND:' . $dtend,
-    'SUMMARY:' . am_ics_escape($type_name ?: __('Appointment', 'appointmentmanager')),
-    'URL:' . $ticket_url,
+    'SUMMARY:' . $icsEscape($type_name ?: __('Appointment', 'appointmentmanager')),
+    'URL:' . $icsEscape($ticket_url),
 ];
 if ($location_name) {
-    $lines[] = 'LOCATION:' . am_ics_escape($location_name);
+    $lines[] = 'LOCATION:' . $icsEscape($location_name);
 }
-$lines[] = 'DESCRIPTION:' . am_ics_escape($description);
+$lines[] = 'DESCRIPTION:' . $icsEscape($description);
 $lines[] = 'END:VEVENT';
 $lines[] = 'END:VCALENDAR';
 
 header('Content-Type: text/calendar; charset=utf-8');
 header('Content-Disposition: attachment; filename="appointment.ics"');
 header('Cache-Control: no-cache, no-store');
-echo implode("\r\n", $lines) . "\r\n";
+echo implode('', array_map(fn($l) => $icsFold($l) . "\r\n", $lines));
 exit;

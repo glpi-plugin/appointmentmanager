@@ -154,7 +154,7 @@ class PluginAppointmentmanagerProfile extends CommonDBTM {
         $appt_profiles = $DB->request([
             'SELECT' => ['profiles_id'],
             'FROM'   => 'glpi_profilerights',
-            'WHERE'  => ['name' => 'plugin_appointmentmanager_appointment', ['rights' => ['>', 0]]],
+            'WHERE'  => ['name' => 'plugin_appointmentmanager_appointment', 'rights' => ['>', 0]],
         ]);
 
         foreach ($appt_profiles as $row) {

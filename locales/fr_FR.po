@@ -484,3 +484,6 @@ msgstr "Motif de la demande de report (facultatif)"
 
 msgid "Add to my calendar"
 msgstr "Ajouter à mon agenda"
+
+msgid "Unchanged — leave blank to keep"
+msgstr "Inchangé — laisser vide pour conserver"
