@@ -9,7 +9,7 @@ if (!Session::haveRight('plugin_appointmentmanager_appointment', READ)) {
 }
 
 $plugin_url   = Plugin::getWebDir('appointmentmanager', true);
-$is_admin     = Session::haveRight('plugin_appointmentmanager_appointment', UPDATE) || Session::haveRight('config', UPDATE);
+$is_admin     = Session::haveRight('plugin_appointmentmanager_technician', UPDATE) || Session::haveRight('config', UPDATE);
 $current_user = (int)Session::getLoginUserID();
 $selected_tech = $is_admin ? (int)($_GET['techs_id'] ?? 0) : $current_user;
 

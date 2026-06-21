@@ -27,7 +27,7 @@ if (!$from_raw || !$to_raw) {
 $from = str_replace('T', ' ', substr($from_raw, 0, 19));
 $to   = str_replace('T', ' ', substr($to_raw,   0, 19));
 
-$is_admin    = Session::haveRight('plugin_appointmentmanager_appointment', UPDATE) || Session::haveRight('config', UPDATE);
+$is_admin    = Session::haveRight('plugin_appointmentmanager_technician', UPDATE) || Session::haveRight('config', UPDATE);
 $current_uid = (int)Session::getLoginUserID();
 
 // Users without READ right (e.g. requesters using the reschedule calendar) get
