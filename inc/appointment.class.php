@@ -521,7 +521,7 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         if (!$fc_loaded) {
             echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">';
             echo '<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>';
-            echo '<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/locales-all.global.min.js"></script>';
+            echo '<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/locales-all.global.min.js"></script>';
             $fc_loaded = true;
         }
 

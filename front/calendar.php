@@ -68,7 +68,7 @@ $fc_locale  = ($lang_base === 'zh') ? strtolower(str_replace('_', '-', $glpi_lan
 
 echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">';
 echo '<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>';
-echo '<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/locales-all.global.min.js"></script>';
+echo '<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/locales-all.global.min.js"></script>';
 
 echo '<div class="container-fluid mt-3">';
 
