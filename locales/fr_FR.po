@@ -481,3 +481,6 @@ msgstr "Le demandeur a proposé un nouvel horaire de rendez-vous. Le technicien 
 
 msgid "Reason for the reschedule request (optional)"
 msgstr "Motif de la demande de report (facultatif)"
+
+msgid "Add to my calendar"
+msgstr "Ajouter à mon agenda"

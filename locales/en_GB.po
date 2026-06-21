@@ -436,3 +436,6 @@ msgstr "by %s"
 
 msgid "Name is required."
 msgstr "Name is required."
+
+msgid "Add to my calendar"
+msgstr "Add to my calendar"
