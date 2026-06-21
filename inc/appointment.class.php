@@ -372,6 +372,17 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         $content .= '<p><span class="badge ' . $badge_class . '">' . $label . '</span> '
                   . sprintf(__('by %s', 'appointmentmanager'), $user_name) . '</p>';
 
+        if ($new_status === self::STATUS_CONFIRMED && !empty($appt['confirm_token'])) {
+            global $CFG_GLPI;
+            $ics_url  = rtrim($CFG_GLPI['url_base'] ?? '', '/')
+                      . '/plugins/appointmentmanager/front/ics.php?token='
+                      . urlencode($appt['confirm_token']);
+            $content .= '<p><a href="' . htmlspecialchars($ics_url, ENT_QUOTES, 'UTF-8') . '" style="font-size:0.9em;">'
+                      . '<i class="ti ti-calendar-download me-1"></i>'
+                      . __('Add to my calendar', 'appointmentmanager')
+                      . '</a></p>';
+        }
+
         $DB->update('glpi_itilfollowups', ['content' => $content], ['id' => $fu_id]);
     }
 
@@ -421,6 +432,17 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
                   . sprintf(__('by %s', 'appointmentmanager'), $user_name) . '</p>';
         $content .= '<p><strong>' . __('Start', 'appointmentmanager') . ':</strong> ' . $date_start_fmt . '</p>';
         $content .= '<p><strong>' . __('End', 'appointmentmanager') . ':</strong> ' . $date_end_fmt . '</p>';
+
+        if ($status === self::STATUS_CONFIRMED && !empty($appt['confirm_token'])) {
+            global $CFG_GLPI;
+            $ics_url  = rtrim($CFG_GLPI['url_base'] ?? '', '/')
+                      . '/plugins/appointmentmanager/front/ics.php?token='
+                      . urlencode($appt['confirm_token']);
+            $content .= '<p><a href="' . htmlspecialchars($ics_url, ENT_QUOTES, 'UTF-8') . '" style="font-size:0.9em;">'
+                      . '<i class="ti ti-calendar-download me-1"></i>'
+                      . __('Add to my calendar', 'appointmentmanager')
+                      . '</a></p>';
+        }
 
         $followup = new ITILFollowup();
         $followup->add([
