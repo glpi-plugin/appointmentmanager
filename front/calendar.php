@@ -61,8 +61,17 @@ Html::header(
 
 Html::displayMessageAfterRedirect();
 
+$glpi_lang  = $_SESSION['glpilanguage'] ?? 'en_GB';
+$lang_parts = explode('_', $glpi_lang);
+$lang_base  = strtolower($lang_parts[0]);
+$fc_locale  = ($lang_base === 'zh') ? strtolower(str_replace('_', '-', $glpi_lang)) : $lang_base;
+
 echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">';
 echo '<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>';
+if ($lang_base !== 'en') {
+    echo '<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/locales/'
+        . htmlspecialchars($fc_locale, ENT_QUOTES, 'UTF-8') . '.global.min.js"></script>';
+}
 
 echo '<div class="container-fluid mt-3">';
 
@@ -95,10 +104,7 @@ $j_events_url = json_encode($events_url, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_
 $j_appt_url   = json_encode($appt_url,   JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
 $j_tech_id    = json_encode($selected_tech);
 
-$lbl_today    = json_encode(__('Today'));
-$lbl_day      = json_encode(__('Day'));
-$lbl_week     = json_encode(__('Week'));
-$lbl_month    = json_encode(__('Month'));
+$j_fc_locale  = json_encode($fc_locale);
 
 echo '<script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -109,6 +115,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var calendar = new FullCalendar.Calendar(document.getElementById("am-calendar"), {
         initialView: "timeGridWeek",
         firstDay: 1,
+        locale: ' . $j_fc_locale . ',
         height: "auto",
         slotMinTime: "06:00:00",
         slotMaxTime: "21:00:00",
@@ -117,12 +124,6 @@ document.addEventListener("DOMContentLoaded", function() {
             left:   "prev,next today",
             center: "title",
             right:  "timeGridDay,timeGridWeek,dayGridMonth"
-        },
-        buttonText: {
-            today: ' . $lbl_today . ',
-            day:   ' . $lbl_day   . ',
-            week:  ' . $lbl_week  . ',
-            month: ' . $lbl_month . '
         },
         events: {
             url:    eventsUrl,

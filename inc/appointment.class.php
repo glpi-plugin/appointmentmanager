@@ -511,11 +511,20 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         $btn_icon     = $is_update ? 'ti-calendar-event' : 'ti-calendar-plus';
         $submit_label = $is_update ? __('Update', 'appointmentmanager') : __('Propose', 'appointmentmanager');
 
+        $glpi_lang  = $_SESSION['glpilanguage'] ?? 'en_GB';
+        $lang_parts = explode('_', $glpi_lang);
+        $lang_base  = strtolower($lang_parts[0]);
+        $fc_locale  = ($lang_base === 'zh') ? strtolower(str_replace('_', '-', $glpi_lang)) : $lang_base;
+
         // Load FullCalendar CSS + JS once per page render
         static $fc_loaded = false;
         if (!$fc_loaded) {
             echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">';
             echo '<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>';
+            if ($lang_base !== 'en') {
+                echo '<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/locales/'
+                    . htmlspecialchars($fc_locale, ENT_QUOTES, 'UTF-8') . '.global.min.js"></script>';
+            }
             $fc_loaded = true;
         }
 
@@ -633,6 +642,7 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         $j_end_id     = json_encode($end_id,     JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
         $j_events_url = json_encode($events_url, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
         $j_tech_id    = json_encode($current_user);
+        $j_fc_locale  = json_encode($fc_locale);
 
         echo '<script>
 (function() {
@@ -653,6 +663,7 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
     var calOptions = {
         initialView: "timeGridWeek",
         firstDay: 1,
+        locale: ' . $j_fc_locale . ',
         height: 450,
         slotMinTime: "06:00:00",
         slotMaxTime: "21:00:00",

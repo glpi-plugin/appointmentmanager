@@ -100,10 +100,19 @@ if ($action === 'reschedule') {
     $date_start_fmt = Html::convDateTime($appt['date_start']);
     $date_end_fmt   = Html::convDateTime($appt['date_end']);
 
+    $glpi_lang  = $_SESSION['glpilanguage'] ?? 'en_GB';
+    $lang_parts = explode('_', $glpi_lang);
+    $lang_base  = strtolower($lang_parts[0]);
+    $fc_locale  = ($lang_base === 'zh') ? strtolower(str_replace('_', '-', $glpi_lang)) : $lang_base;
+
     Html::header(__('Reschedule appointment', 'appointmentmanager'), $_SERVER['PHP_SELF'], 'tools', 'PluginAppointmentmanagerConfig');
 
     echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">';
     echo '<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>';
+    if ($lang_base !== 'en') {
+        echo '<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/locales/'
+            . htmlspecialchars($fc_locale, ENT_QUOTES, 'UTF-8') . '.global.min.js"></script>';
+    }
 
     echo '<div class="container mt-4" style="max-width:960px">';
 
@@ -147,6 +156,7 @@ if ($action === 'reschedule') {
 
     $j_events_url = json_encode($events_url, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
     $j_tech_id    = json_encode($tech_id);
+    $j_fc_locale  = json_encode($fc_locale);
 
     echo '<script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -163,6 +173,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var calendar = new FullCalendar.Calendar(calEl, {
         initialView: "timeGridWeek",
         firstDay: 1,
+        locale: ' . $j_fc_locale . ',
         height: 500,
         slotMinTime: "06:00:00",
         slotMaxTime: "21:00:00",
