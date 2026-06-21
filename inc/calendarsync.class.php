@@ -4,13 +4,11 @@ class PluginAppointmentmanagerCalendarSync {
     // ── Push: lifecycle hooks ─────────────────────────────────────────────────
 
     static function onAppointmentCreated(array $appt): void {
-        self::syncForUser($appt, (int)$appt['users_id_tech'],      'create');
-        self::syncForUser($appt, (int)$appt['users_id_requester'], 'create');
+        self::syncForUser($appt, (int)$appt['users_id_tech'], 'create');
     }
 
     static function onAppointmentUpdated(array $appt): void {
-        self::syncForUser($appt, (int)$appt['users_id_tech'],      'update');
-        self::syncForUser($appt, (int)$appt['users_id_requester'], 'update');
+        self::syncForUser($appt, (int)$appt['users_id_tech'], 'update');
     }
 
     static function onStatusChanged(array $appt, string $new_status): void {
@@ -20,8 +18,7 @@ class PluginAppointmentmanagerCalendarSync {
         ];
         $action = in_array($new_status, $terminal, true) ? 'delete' : 'update';
 
-        self::syncForUser($appt, (int)$appt['users_id_tech'],      $action);
-        self::syncForUser($appt, (int)$appt['users_id_requester'], $action);
+        self::syncForUser($appt, (int)$appt['users_id_tech'], $action);
     }
 
     // ── Backfill: push existing appointments to connected calendars ───────────
@@ -55,20 +52,19 @@ class PluginAppointmentmanagerCalendarSync {
         $failed = 0;
 
         foreach ($iter as $appt) {
-            foreach ([(int)$appt['users_id_tech'], (int)$appt['users_id_requester']] as $uid) {
-                if ($users_id_filter > 0 && $uid !== $users_id_filter) {
-                    continue;
-                }
-                if ($uid <= 0) {
-                    continue;
-                }
-                try {
-                    self::syncForUser($appt, $uid, 'create');
-                    $synced++;
-                } catch (Throwable $e) {
-                    error_log('[appointmentmanager] backfillSync user=' . $uid . ' appt=' . $appt['id'] . ': ' . $e->getMessage());
-                    $failed++;
-                }
+            $uid = (int)$appt['users_id_tech'];
+            if ($uid <= 0) {
+                continue;
+            }
+            if ($users_id_filter > 0 && $uid !== $users_id_filter) {
+                continue;
+            }
+            try {
+                self::syncForUser($appt, $uid, 'create');
+                $synced++;
+            } catch (Throwable $e) {
+                error_log('[appointmentmanager] backfillSync user=' . $uid . ' appt=' . $appt['id'] . ': ' . $e->getMessage());
+                $failed++;
             }
         }
 
