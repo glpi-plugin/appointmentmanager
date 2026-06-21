@@ -712,6 +712,42 @@ if ($tab === 'integrations') {
             . '</button></div>';
         echo '</form>';
         echo '</div></div>';
+
+        // ── Tech calendar connection status ───────────────────────────────────
+        $enrolled_techs = am_get_tech_users();
+        if (!empty($enrolled_techs)) {
+            echo '<div class="card mb-4">';
+            echo '<div class="card-header"><h5 class="mb-0">' . __('Technician calendar connections', 'appointmentmanager') . '</h5></div>';
+            echo '<div class="card-body p-0">';
+            echo '<table class="table table-hover mb-0"><thead><tr>'
+                . '<th>' . __('Technician') . '</th>'
+                . '<th>Google Calendar</th>'
+                . '<th>Microsoft Outlook</th>'
+                . '</tr></thead><tbody>';
+            foreach ($enrolled_techs as $uid => $uname) {
+                echo '<tr>';
+                echo '<td>' . htmlspecialchars($uname, ENT_QUOTES, 'UTF-8') . '</td>';
+                foreach (['google', 'microsoft'] as $prov_key) {
+                    $prov_settings = $all_settings[$prov_key] ?? null;
+                    $is_enabled    = !empty($prov_settings['is_enabled']);
+                    $token         = $is_enabled
+                        ? PluginAppointmentmanagerOAuthProvider::getTokenRow((int)$uid, $prov_key)
+                        : null;
+                    echo '<td>';
+                    if (!$is_enabled) {
+                        echo '<span class="badge bg-secondary">' . __('Not configured', 'appointmentmanager') . '</span>';
+                    } elseif ($token) {
+                        echo '<span class="badge bg-success">' . __('Connected', 'appointmentmanager') . '</span>';
+                    } else {
+                        echo '<span class="badge bg-warning text-dark">' . __('Not connected', 'appointmentmanager') . '</span>';
+                    }
+                    echo '</td>';
+                }
+                echo '</tr>';
+            }
+            echo '</tbody></table>';
+            echo '</div></div>';
+        }
     }
 
     // ── Per-user: connect / disconnect ────────────────────────────────────────

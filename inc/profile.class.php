@@ -141,6 +141,45 @@ class PluginAppointmentmanagerProfile extends CommonDBTM {
                 ]);
             }
         }
+
+        // Grant calendar READ to every profile that has appointment rights,
+        // so techs can connect their own Google/Microsoft calendar.
+        // Only sets the right when it is not already explicitly configured (rights = 0 or missing).
+        self::grantCalendarRightToAppointmentProfiles();
+    }
+
+    static function grantCalendarRightToAppointmentProfiles(): void {
+        global $DB;
+
+        $appt_profiles = $DB->request([
+            'SELECT' => ['profiles_id'],
+            'FROM'   => 'glpi_profilerights',
+            'WHERE'  => ['name' => 'plugin_appointmentmanager_appointment', ['rights' => ['>', 0]]],
+        ]);
+
+        foreach ($appt_profiles as $row) {
+            $pid = (int)$row['profiles_id'];
+
+            $cal_row = $DB->request([
+                'FROM'  => 'glpi_profilerights',
+                'WHERE' => ['profiles_id' => $pid, 'name' => 'plugin_appointmentmanager_calendar'],
+                'LIMIT' => 1,
+            ]);
+
+            if ($cal_row->count() === 0) {
+                $DB->insert('glpi_profilerights', [
+                    'profiles_id' => $pid,
+                    'name'        => 'plugin_appointmentmanager_calendar',
+                    'rights'      => READ,
+                ]);
+            } elseif ((int)$cal_row->current()['rights'] === 0) {
+                $DB->update('glpi_profilerights', ['rights' => READ], [
+                    'profiles_id' => $pid,
+                    'name'        => 'plugin_appointmentmanager_calendar',
+                ]);
+            }
+            // If rights > 0 already, leave the admin's explicit setting untouched.
+        }
     }
 
     static function removeRights() {

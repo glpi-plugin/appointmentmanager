@@ -175,6 +175,8 @@ function plugin_appointmentmanager_install() {
 
     PluginAppointmentmanagerAppointmentType::seedDefaults();
     PluginAppointmentmanagerProfile::addDefaultProfileRights();
+    // Ensure all profiles with appointment rights can connect their own calendar.
+    PluginAppointmentmanagerProfile::grantCalendarRightToAppointmentProfiles();
 
     return true;
 }
