@@ -88,8 +88,10 @@ if ($is_admin && !empty($techs)) {
     echo '</select></div>';
 }
 
-echo '<a href="' . htmlspecialchars($plugin_url . '/front/appointment.php', ENT_QUOTES, 'UTF-8')
-    . '" class="btn btn-sm btn-primary"><i class="ti ti-calendar-plus me-1"></i>'
+$btn_hidden = ($is_admin && $selected_tech === 0) ? ' d-none' : '';
+echo '<a id="amNewApptBtn"'
+    . ' href="' . htmlspecialchars($plugin_url . '/front/appointment.php', ENT_QUOTES, 'UTF-8') . '"'
+    . ' class="btn btn-sm btn-primary' . $btn_hidden . '"><i class="ti ti-calendar-plus me-1"></i>'
     . __('New appointment', 'appointmentmanager') . '</a>';
 echo '</div>';
 
@@ -146,6 +148,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         },
         dateClick: function(info) {
+            if (techId === 0) return;
             var clicked = info.date;
             var evts = calendar.getEvents();
             for (var i = 0; i < evts.length; i++) {
@@ -189,6 +192,8 @@ document.addEventListener("DOMContentLoaded", function() {
         techSelect.addEventListener("change", function() {
             techId = parseInt(this.value, 10);
             calendar.refetchEvents();
+            var btn = document.getElementById("amNewApptBtn");
+            if (btn) { btn.classList.toggle("d-none", techId === 0); }
         });
     }
 });
