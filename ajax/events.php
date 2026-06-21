@@ -109,9 +109,20 @@ foreach ($appointments as $appt) {
     ];
 }
 
-// Blocked period background events (only for a specific tech)
+// Blocked period background events
+global $DB;
 if ($techs_id > 0) {
-    $blocked = PluginAppointmentmanagerBlockedPeriod::getForCalendar($techs_id, $from, $to);
+    $bp_uids = [$techs_id];
+} else {
+    $bp_uids = [];
+    $enrolled_iter = $DB->request(['SELECT' => ['users_id'], 'FROM' => 'glpi_plugin_appointmentmanager_enrolled']);
+    foreach ($enrolled_iter as $row) {
+        $bp_uids[] = (int)$row['users_id'];
+    }
+}
+
+foreach ($bp_uids as $bp_uid) {
+    $blocked = PluginAppointmentmanagerBlockedPeriod::getForCalendar($bp_uid, $from, $to);
     foreach ($blocked as $bp) {
         $events[] = [
             'id'      => 'bp_' . (int)$bp['id'],
