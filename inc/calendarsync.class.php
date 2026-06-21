@@ -125,14 +125,16 @@ class PluginAppointmentmanagerCalendarSync {
                 $event_id  = self::getExternalEventId((int)$appt['id'], $users_id, $provider);
                 $event_data = self::buildEventData($appt, $provider);
 
-                if ($action === 'create' || ($action === 'update' && !$event_id)) {
+                if ($action === 'delete') {
+                    if ($event_id) {
+                        $instance->deleteEvent($access_token, $event_id);
+                        self::deleteExternalEventId((int)$appt['id'], $users_id, $provider);
+                    }
+                } elseif ($event_id) {
+                    $instance->updateEvent($access_token, $event_id, $event_data);
+                } else {
                     $new_id = $instance->createEvent($access_token, $event_data);
                     self::storeExternalEventId((int)$appt['id'], $users_id, $provider, $new_id);
-                } elseif ($action === 'update' && $event_id) {
-                    $instance->updateEvent($access_token, $event_id, $event_data);
-                } elseif ($action === 'delete' && $event_id) {
-                    $instance->deleteEvent($access_token, $event_id);
-                    self::deleteExternalEventId((int)$appt['id'], $users_id, $provider);
                 }
             } catch (Throwable $e) {
                 error_log('[appointmentmanager] CalendarSync::syncForUser(action=' . $action . ', provider=' . $provider . ', user=' . $users_id . '): ' . $e->getMessage());
