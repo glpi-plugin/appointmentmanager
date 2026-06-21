@@ -96,10 +96,10 @@ class PluginAppointmentmanagerGoogleProvider extends PluginAppointmentmanagerOAu
         );
     }
 
-    public function fetchEvents(string $access_token, string $from, string $to): array {
+    public function fetchEvents(string $access_token, string $from, string $to, string $from_raw = '', string $to_raw = ''): array {
         $url = self::EVENTS_URL . '?' . http_build_query([
-            'timeMin'      => date('c', strtotime($from)),
-            'timeMax'      => date('c', strtotime($to)),
+            'timeMin'      => $from_raw ?: date('c', strtotime($from)),
+            'timeMax'      => $to_raw   ?: date('c', strtotime($to)),
             'singleEvents' => 'true',
             'orderBy'      => 'startTime',
             'maxResults'   => 250,

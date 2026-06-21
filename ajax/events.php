@@ -4,8 +4,8 @@ include('../../../inc/includes.php');
 Session::checkLoginUser();
 header('Content-Type: application/json');
 
-$from     = trim($_GET['start'] ?? '');
-$to       = trim($_GET['end']   ?? '');
+$from_raw = trim($_GET['start'] ?? '');
+$to_raw   = trim($_GET['end']   ?? '');
 $techs_id = (int)($_GET['techs_id'] ?? 0);
 
 $has_read = Session::haveRight('plugin_appointmentmanager_appointment', READ);
@@ -15,7 +15,7 @@ if (!$has_read && $techs_id <= 0) {
     exit;
 }
 
-if (!$from || !$to) {
+if (!$from_raw || !$to_raw) {
     echo json_encode(['error' => 'Missing start/end'], JSON_HEX_TAG | JSON_HEX_AMP);
     http_response_code(400);
     exit;
@@ -23,8 +23,9 @@ if (!$from || !$to) {
 
 // FullCalendar sends ISO 8601 with local timezone offset (e.g. 2026-06-15T00:00:00+02:00).
 // MySQL DATETIME comparison is unreliable with timezone suffixes, so strip to plain datetime.
-$from = str_replace('T', ' ', substr($from, 0, 19));
-$to   = str_replace('T', ' ', substr($to,   0, 19));
+// Keep the originals for external calendar API calls which accept RFC 3339 directly.
+$from = str_replace('T', ' ', substr($from_raw, 0, 19));
+$to   = str_replace('T', ' ', substr($to_raw,   0, 19));
 
 $is_admin    = Session::haveRight('plugin_appointmentmanager_appointment', UPDATE) || Session::haveRight('config', UPDATE);
 $current_uid = (int)Session::getLoginUserID();
@@ -108,7 +109,7 @@ foreach ($appointments as $appt) {
     ];
 }
 
-// Blocked period background events
+// Blocked period background events (only for a specific tech)
 if ($techs_id > 0) {
     $blocked = PluginAppointmentmanagerBlockedPeriod::getForCalendar($techs_id, $from, $to);
     foreach ($blocked as $bp) {
@@ -121,9 +122,15 @@ if ($techs_id > 0) {
             'color'   => '#cccccc',
         ];
     }
+}
 
-    // External calendar busy slots (Google / Outlook)
-    $busy_slots = PluginAppointmentmanagerCalendarSync::fetchExternalBusySlots($techs_id, $from, $to);
+// External calendar busy slots (Google / Outlook).
+// Always include the logged-in user's own external calendar so their events show
+// regardless of which tech is selected. Also include the selected tech's calendar
+// if it belongs to a different user.
+$ext_uids = array_unique(array_filter([$current_uid, $techs_id > 0 ? $techs_id : 0]));
+foreach ($ext_uids as $uid) {
+    $busy_slots = PluginAppointmentmanagerCalendarSync::fetchExternalBusySlots($uid, $from, $to, $from_raw, $to_raw);
     foreach ($busy_slots as $slot) {
         $events[] = $slot;
     }

@@ -26,7 +26,7 @@ class PluginAppointmentmanagerCalendarSync {
 
     // ── Pull: fetch external busy slots for the mini-calendar ─────────────────
 
-    static function fetchExternalBusySlots(int $users_id, string $from, string $to): array {
+    static function fetchExternalBusySlots(int $users_id, string $from, string $to, string $from_raw = '', string $to_raw = ''): array {
         if ($users_id <= 0) {
             return [];
         }
@@ -42,7 +42,7 @@ class PluginAppointmentmanagerCalendarSync {
                 if (!$instance) {
                     continue;
                 }
-                $slots = $instance->fetchEvents($access_token, $from, $to);
+                $slots = $instance->fetchEvents($access_token, $from, $to, $from_raw, $to_raw);
                 foreach ($slots as $slot) {
                     $busy[] = [
                         'id'      => 'ext_' . $provider . '_' . md5($slot['start'] . $slot['end']),
