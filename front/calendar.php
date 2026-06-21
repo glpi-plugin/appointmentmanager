@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function() {
             };
             var status     = arg.event.extendedProps.status || "";
             var statusIcon = statusIcons[status] || "";
-            var typeIcon   = arg.event.extendedProps.icon ? '<i class="' + arg.event.extendedProps.icon + '" style="margin-right:2px"></i>' : "";
+            var typeIcon   = arg.event.extendedProps.icon ? "<i class=\"" + arg.event.extendedProps.icon + "\" style=\"margin-right:2px\"></i>" : "";
             return { html: "<div style=\"white-space:normal;font-size:0.8em;padding:1px 3px;overflow:hidden\">" + statusIcon + " " + typeIcon + arg.event.title + "</div>" };
         },
         eventDidMount: function(arg) {
