@@ -179,8 +179,8 @@ msgstr "Could not process the action. Please contact support."
 msgid "All appointments for this ticket"
 msgstr "All appointments for this ticket"
 
-msgid "Select a type\xe2\x80\xa6"
-msgstr "Select a type\xe2\x80\xa6"
+msgid "Select a type…"
+msgstr "Select a type…"
 
 msgid "Office, building, or remote"
 msgstr "Office, building, or remote"
@@ -242,8 +242,8 @@ msgstr "Update"
 msgid "Propose"
 msgstr "Propose"
 
-msgid "Appointment Manager \xe2\x80\x93 Settings"
-msgstr "Appointment Manager \xe2\x80\x93 Settings"
+msgid "Appointment Manager – Settings"
+msgstr "Appointment Manager – Settings"
 
 msgid "Appointment action"
 msgstr "Appointment action"
@@ -326,8 +326,8 @@ msgstr "Add technician"
 msgid "Add technicians in the Technicians tab."
 msgstr "Add technicians in the Technicians tab."
 
-msgid "Select a technician\xe2\x80\xa6"
-msgstr "Select a technician\xe2\x80\xa6"
+msgid "Select a technician…"
+msgstr "Select a technician…"
 
 msgid "Invalid technician."
 msgstr "Invalid technician."

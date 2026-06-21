@@ -131,8 +131,8 @@ msgstr "Gérer sa propre disponibilité"
 msgid "Appointment Manager plugin"
 msgstr "Plugin Gestionnaire de rendez-vous"
 
-msgid "Appointment Manager \xe2\x80\x93 Settings"
-msgstr "Gestionnaire de rendez-vous \xe2\x80\x93 Param\xc3\xa8tres"
+msgid "Appointment Manager – Settings"
+msgstr "Gestionnaire de rendez-vous – Paramètres"
 
 msgid "Appointment action"
 msgstr "Action sur le rendez-vous"
@@ -206,8 +206,8 @@ msgstr "Ajouter un technicien"
 msgid "Add technicians in the Technicians tab."
 msgstr "Ajoutez des techniciens dans l'onglet Techniciens."
 
-msgid "Select a technician\xe2\x80\xa6"
-msgstr "S\xc3\xa9lectionner un technicien\xe2\x80\xa6"
+msgid "Select a technician…"
+msgstr "Sélectionner un technicien…"
 
 msgid "Invalid technician."
 msgstr "Technicien invalide."
@@ -398,8 +398,8 @@ msgstr "Impossible de traiter l'action. Veuillez contacter le support."
 msgid "Name is required."
 msgstr "Le nom est obligatoire."
 
-msgid "Select a type\xe2\x80\xa6"
-msgstr "S\xc3\xa9lectionner un type\xe2\x80\xa6"
+msgid "Select a type…"
+msgstr "Sélectionner un type…"
 
 msgid "Office, building, or remote"
 msgstr "Bureau, bâtiment ou à distance"
