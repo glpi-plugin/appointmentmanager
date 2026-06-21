@@ -125,6 +125,17 @@ document.addEventListener("DOMContentLoaded", function() {
             center: "title",
             right:  "timeGridDay,timeGridWeek,dayGridMonth"
         },
+        selectable: true,
+        selectAllow: function(selectInfo) {
+            var evts = calendar.getEvents();
+            for (var i = 0; i < evts.length; i++) {
+                var ev = evts[i];
+                if (ev.display === "background" && ev.start < selectInfo.end && ev.end > selectInfo.start) {
+                    return false;
+                }
+            }
+            return true;
+        },
         events: {
             url:    eventsUrl,
             method: "GET",
