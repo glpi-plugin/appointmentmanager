@@ -138,6 +138,14 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         },
         dateClick: function(info) {
+            var clicked = info.date;
+            var evts = calendar.getEvents();
+            for (var i = 0; i < evts.length; i++) {
+                var ev = evts[i];
+                if (ev.display === "background" && ev.start <= clicked && ev.end > clicked) {
+                    return;
+                }
+            }
             window.location.href = apptUrl + "?date_start=" + encodeURIComponent(info.dateStr);
         },
         eventContent: function(arg) {
