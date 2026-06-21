@@ -162,6 +162,14 @@ class PluginAppointmentmanagerCalendarSync {
             $description .= "\n" . strip_tags($appt['comment']);
         }
 
+        $location = '';
+        if (!empty($appt['locations_id'])) {
+            $loc_name = Dropdown::getDropdownName('glpi_locations', (int)$appt['locations_id']);
+            if ($loc_name && $loc_name !== '&nbsp;' && $loc_name !== NOT_AVAILABLE) {
+                $location = $loc_name;
+            }
+        }
+
         if ($provider === 'google') {
             $data = [
                 'summary'     => $title,
@@ -169,8 +177,8 @@ class PluginAppointmentmanagerCalendarSync {
                 'start'       => ['dateTime' => date('c', strtotime($appt['date_start'])), 'timeZone' => $tz],
                 'end'         => ['dateTime' => date('c', strtotime($appt['date_end'])),   'timeZone' => $tz],
             ];
-            if (!empty($appt['location'])) {
-                $data['location'] = $appt['location'];
+            if ($location) {
+                $data['location'] = $location;
             }
             return $data;
         }
@@ -182,8 +190,8 @@ class PluginAppointmentmanagerCalendarSync {
             'start'    => ['dateTime' => date('Y-m-d\TH:i:s', strtotime($appt['date_start'])), 'timeZone' => $tz],
             'end'      => ['dateTime' => date('Y-m-d\TH:i:s', strtotime($appt['date_end'])),   'timeZone' => $tz],
         ];
-        if (!empty($appt['location'])) {
-            $data['location'] = ['displayName' => $appt['location']];
+        if ($location) {
+            $data['location'] = ['displayName' => $location];
         }
         return $data;
     }

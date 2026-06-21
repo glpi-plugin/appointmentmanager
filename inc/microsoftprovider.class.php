@@ -99,8 +99,8 @@ class PluginAppointmentmanagerMicrosoftProvider extends PluginAppointmentmanager
 
     public function fetchEvents(string $access_token, string $from, string $to, string $from_raw = '', string $to_raw = ''): array {
         $url = 'https://graph.microsoft.com/v1.0/me/calendarview?' . http_build_query([
-            'startDateTime' => $from_raw ?: date('Y-m-d\TH:i:s', strtotime($from)),
-            'endDateTime'   => $to_raw   ?: date('Y-m-d\TH:i:s', strtotime($to)),
+            'startDateTime' => gmdate('Y-m-d\TH:i:s', strtotime($from_raw ?: $from)) . 'Z',
+            'endDateTime'   => gmdate('Y-m-d\TH:i:s', strtotime($to_raw   ?: $to))   . 'Z',
             '$top'          => 250,
             '$select'       => 'start,end',
         ]);
