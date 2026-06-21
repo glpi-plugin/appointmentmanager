@@ -36,6 +36,15 @@ function am_ics_escape(string $s): string {
     return str_replace(['\\', ';', ',', "\n", "\r"], ['\\\\', '\;', '\,', '\n', ''], $s);
 }
 
+$base       = rtrim($CFG_GLPI['url_base'] ?? '', '/');
+$ticket_url = $base . '/front/ticket.form.php?id=' . (int)$appt['tickets_id'];
+
+$description = $comment;
+if ($description) {
+    $description .= '\n\n';
+}
+$description .= __('Ticket', 'appointmentmanager') . ': ' . $ticket_url;
+
 $lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
@@ -47,13 +56,12 @@ $lines = [
     'DTSTART:' . $dtstart,
     'DTEND:' . $dtend,
     'SUMMARY:' . am_ics_escape($type_name ?: __('Appointment', 'appointmentmanager')),
+    'URL:' . $ticket_url,
 ];
 if ($location_name) {
     $lines[] = 'LOCATION:' . am_ics_escape($location_name);
 }
-if ($comment) {
-    $lines[] = 'DESCRIPTION:' . am_ics_escape($comment);
-}
+$lines[] = 'DESCRIPTION:' . am_ics_escape($description);
 $lines[] = 'END:VEVENT';
 $lines[] = 'END:VCALENDAR';
 
