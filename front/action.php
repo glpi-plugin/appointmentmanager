@@ -110,6 +110,7 @@ if ($action === 'reschedule') {
     echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">';
     echo '<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>';
     echo '<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/locales-all.global.min.js"></script>';
+    echo '<script>window.__amCalFC = window.FullCalendar;</script>';
 
     echo '<div class="container mt-4" style="max-width:960px">';
 
@@ -182,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function() {
              + "T" + pad(d.getHours()) + ":" + pad(d.getMinutes());
     }
 
-    var calendar = new FullCalendar.Calendar(calEl, {
+    var calendar = new window.__amCalFC.Calendar(calEl, {
         initialView: "timeGridWeek",
         firstDay: 1,
         locale: ' . $j_fc_locale . ',

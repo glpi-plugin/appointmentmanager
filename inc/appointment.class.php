@@ -522,6 +522,7 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
             echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">';
             echo '<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>';
             echo '<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/locales-all.global.min.js"></script>';
+            echo '<script>window.__amCalFC = window.FullCalendar;</script>';
             $fc_loaded = true;
         }
 
@@ -737,7 +738,7 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
     if (modalEl) {
         modalEl.addEventListener("shown.bs.modal", function() {
             if (!calendar) {
-                calendar = new FullCalendar.Calendar(calEl, calOptions);
+                calendar = new window.__amCalFC.Calendar(calEl, calOptions);
                 calendar.render();
             } else {
                 calendar.updateSize();
