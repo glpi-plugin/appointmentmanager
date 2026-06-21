@@ -47,15 +47,6 @@ function plugin_init_appointmentmanager() {
         $PLUGIN_HOOKS['timeline_actions']['appointmentmanager'] = 'plugin_appointmentmanager_timeline_actions';
     }
 
-    if (
-        Session::haveRight('plugin_appointmentmanager_appointment', UPDATE)
-        || Session::haveRight('config', UPDATE)
-    ) {
-        if (!isset($PLUGIN_HOOKS['menu_toadd']['appointmentmanager'])) {
-            $PLUGIN_HOOKS['menu_toadd']['appointmentmanager'] = [];
-        }
-        $PLUGIN_HOOKS['menu_toadd']['appointmentmanager']['config'] = 'PluginAppointmentmanagerConfig';
-    }
 }
 
 function plugin_appointmentmanager_timeline_actions(array $params): void {
