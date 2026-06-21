@@ -522,7 +522,6 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
             echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css">';
             echo '<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>';
             echo '<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/locales-all.global.min.js"></script>';
-            echo '<script>window.__amCalFC = window.FullCalendar;</script>';
             $fc_loaded = true;
         }
 
@@ -738,8 +737,24 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
     if (modalEl) {
         modalEl.addEventListener("shown.bs.modal", function() {
             if (!calendar) {
-                calendar = new window.__amCalFC.Calendar(calEl, calOptions);
-                calendar.render();
+                var _fc  = window.FullCalendar;
+                var _loc = ' . $j_fc_locale . ';
+                var _locales = (_fc && _fc.globalLocales) ? _fc.globalLocales : [];
+                var _hasLocale = !_loc || _loc === "en" ||
+                    _locales.some(function(l) { return l.code === _loc; });
+                var _doCreate = function() {
+                    calendar = new window.FullCalendar.Calendar(calEl, calOptions);
+                    calendar.render();
+                };
+                if (_hasLocale) {
+                    _doCreate();
+                } else {
+                    var _s = document.createElement("script");
+                    _s.src = "https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.11/locales-all.global.min.js";
+                    _s.onload = _doCreate;
+                    _s.onerror = _doCreate;
+                    document.head.appendChild(_s);
+                }
             } else {
                 calendar.updateSize();
                 calendar.refetchEvents();
