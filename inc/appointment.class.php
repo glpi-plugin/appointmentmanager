@@ -641,14 +641,29 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         $j_tech_id    = json_encode($current_user);
         $j_fc_locale  = json_encode($fc_locale);
 
+        $avail = PluginAppointmentmanagerAvailability::getForUser($current_user);
+        $business_hours = [];
+        foreach ($avail as $day => $row) {
+            if ((int)$row['is_active']) {
+                $business_hours[] = [
+                    'daysOfWeek' => [$day % 7],
+                    'startTime'  => substr($row['time_start'], 0, 5),
+                    'endTime'    => substr($row['time_end'],   0, 5),
+                ];
+            }
+        }
+        $j_business_hours = json_encode($business_hours, JSON_HEX_TAG | JSON_HEX_AMP);
+
+        echo '<style>.fc-non-business { cursor: not-allowed; }</style>';
         echo '<script>
 (function() {
     var modalEl  = document.getElementById(' . $j_modal_id . ');
     var calEl    = document.getElementById(' . $j_cal_id . ');
     var startEl  = document.getElementById(' . $j_start_id . ');
     var endEl    = document.getElementById(' . $j_end_id . ');
-    var eventsUrl = ' . $j_events_url . ';
-    var techId    = ' . $j_tech_id . ';
+    var eventsUrl    = ' . $j_events_url . ';
+    var techId       = ' . $j_tech_id . ';
+    var businessHours = ' . $j_business_hours . ';
     var calendar  = null;
 
     function toLocalInput(d) {
@@ -668,15 +683,26 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
         headerToolbar: { left: "prev,next today", center: "title", right: "" },
         selectable: true,
         selectMirror: true,
+        businessHours: businessHours,
         select: function(info) {
             if (startEl) startEl.value = toLocalInput(info.start);
             if (endEl)   endEl.value   = toLocalInput(info.end);
         },
         selectAllow: function(info) {
+            var s = info.start, e = info.end;
+            var inAvail = businessHours.some(function(w) {
+                if (w.daysOfWeek.indexOf(s.getDay()) === -1) return false;
+                var sMin = s.getHours() * 60 + s.getMinutes();
+                var eMin = e.getHours() * 60 + e.getMinutes();
+                var wS = parseInt(w.startTime) * 60 + parseInt(w.startTime.slice(3));
+                var wE = parseInt(w.endTime)   * 60 + parseInt(w.endTime.slice(3));
+                return sMin >= wS && eMin <= wE;
+            });
+            if (!inAvail) return false;
             var events = calendar.getEvents();
             for (var i = 0; i < events.length; i++) {
                 var ev = events[i];
-                if (ev.start < info.end && ev.end > info.start) {
+                if (ev.start < e && ev.end > s) {
                     return false;
                 }
             }

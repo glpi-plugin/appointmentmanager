@@ -155,11 +155,26 @@ if ($action === 'reschedule') {
     $j_tech_id    = json_encode($tech_id);
     $j_fc_locale  = json_encode($fc_locale);
 
+    $avail = PluginAppointmentmanagerAvailability::getForUser($tech_id);
+    $business_hours = [];
+    foreach ($avail as $day => $row) {
+        if ((int)$row['is_active']) {
+            $business_hours[] = [
+                'daysOfWeek' => [$day % 7],
+                'startTime'  => substr($row['time_start'], 0, 5),
+                'endTime'    => substr($row['time_end'],   0, 5),
+            ];
+        }
+    }
+    $j_business_hours = json_encode($business_hours, JSON_HEX_TAG | JSON_HEX_AMP);
+
+    echo '<style>.fc-non-business { cursor: not-allowed; }</style>';
     echo '<script>
 document.addEventListener("DOMContentLoaded", function() {
     var calEl   = document.getElementById("amRescheduleCalendar");
     var startEl = document.getElementById("amRescheduleStart");
     var endEl   = document.getElementById("amRescheduleEnd");
+    var businessHours = ' . $j_business_hours . ';
 
     function toLocalInput(d) {
         var pad = function(n) { return n < 10 ? "0" + n : "" + n; };
@@ -178,15 +193,26 @@ document.addEventListener("DOMContentLoaded", function() {
         headerToolbar: { left: "prev,next today", center: "title", right: "" },
         selectable: true,
         selectMirror: true,
+        businessHours: businessHours,
         select: function(info) {
             startEl.value = toLocalInput(info.start);
             endEl.value   = toLocalInput(info.end);
         },
         selectAllow: function(selectInfo) {
+            var s = selectInfo.start, e = selectInfo.end;
+            var inAvail = businessHours.some(function(w) {
+                if (w.daysOfWeek.indexOf(s.getDay()) === -1) return false;
+                var sMin = s.getHours() * 60 + s.getMinutes();
+                var eMin = e.getHours() * 60 + e.getMinutes();
+                var wS = parseInt(w.startTime) * 60 + parseInt(w.startTime.slice(3));
+                var wE = parseInt(w.endTime)   * 60 + parseInt(w.endTime.slice(3));
+                return sMin >= wS && eMin <= wE;
+            });
+            if (!inAvail) return false;
             var events = calendar.getEvents();
             for (var i = 0; i < events.length; i++) {
                 var ev = events[i];
-                if (ev.display === "background" && ev.start < selectInfo.end && ev.end > selectInfo.start) {
+                if (ev.display === "background" && ev.start < e && ev.end > s) {
                     return false;
                 }
             }
