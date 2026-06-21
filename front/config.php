@@ -282,6 +282,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         Html::redirect($plugin_url . '/front/config.php?tab=integrations');
     }
+
+    if ($action === 'backfill_sync' && $is_admin) {
+        $uid_filter = (int)($_POST['users_id_filter'] ?? 0);
+        $result = PluginAppointmentmanagerCalendarSync::backfillSync($uid_filter);
+        $msg = sprintf(
+            __('%d appointment(s) synced to calendar, %d failed.', 'appointmentmanager'),
+            $result['synced'],
+            $result['failed']
+        );
+        Session::addMessageAfterRedirect($msg, false, $result['failed'] > 0 ? WARNING : INFO);
+        Html::redirect($plugin_url . '/front/config.php?tab=integrations');
+    }
 }
 
 // ── Render ─────────────────────────────────────────────────────────────────────
@@ -710,6 +722,31 @@ if ($tab === 'integrations') {
         echo '<div class="mt-3"><button type="submit" class="btn btn-primary btn-sm">'
             . '<i class="ti ti-device-floppy me-1"></i>' . __('Save credentials', 'appointmentmanager')
             . '</button></div>';
+        echo '</form>';
+        echo '</div></div>';
+
+        // ── Backfill sync ─────────────────────────────────────────────────────
+        echo '<div class="card mb-4">';
+        echo '<div class="card-header"><h5 class="mb-0">' . __('Sync past appointments', 'appointmentmanager') . '</h5></div>';
+        echo '<div class="card-body">';
+        echo '<p class="text-muted small">'
+            . __('Push existing appointments (proposed, confirmed, completed) to technicians\' and requesters\' connected calendars. Safe to run multiple times — already-synced appointments are updated, not duplicated.', 'appointmentmanager')
+            . '</p>';
+        echo '<form method="POST" action="" onsubmit="return confirm(' . json_encode(__('Sync all past appointments to connected calendars?', 'appointmentmanager')) . ')">';
+        echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
+        echo Html::hidden('action', ['value' => 'backfill_sync']);
+        echo '<div class="d-flex align-items-end gap-3">';
+        echo '<div><label class="form-label form-label-sm">' . __('Technician', 'appointmentmanager') . '</label>';
+        echo '<select name="users_id_filter" class="form-select form-select-sm" style="min-width:200px">';
+        echo '<option value="0">' . htmlspecialchars(__('All technicians', 'appointmentmanager'), ENT_QUOTES, 'UTF-8') . '</option>';
+        foreach (am_get_tech_users() as $uid => $uname) {
+            echo '<option value="' . (int)$uid . '">' . htmlspecialchars($uname, ENT_QUOTES, 'UTF-8') . '</option>';
+        }
+        echo '</select></div>';
+        echo '<button type="submit" class="btn btn-sm btn-outline-primary">'
+            . '<i class="ti ti-cloud-upload me-1"></i>' . __('Sync now', 'appointmentmanager')
+            . '</button>';
+        echo '</div>';
         echo '</form>';
         echo '</div></div>';
 

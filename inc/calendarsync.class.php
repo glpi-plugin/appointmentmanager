@@ -24,6 +24,57 @@ class PluginAppointmentmanagerCalendarSync {
         self::syncForUser($appt, (int)$appt['users_id_requester'], $action);
     }
 
+    // ── Backfill: push existing appointments to connected calendars ───────────
+
+    static function backfillSync(int $users_id_filter = 0): array {
+        global $DB;
+
+        $syncable = [
+            PluginAppointmentmanagerAppointment::STATUS_PROPOSED,
+            PluginAppointmentmanagerAppointment::STATUS_CONFIRMED,
+            PluginAppointmentmanagerAppointment::STATUS_COMPLETED,
+        ];
+
+        $where = ['status' => $syncable];
+        if ($users_id_filter > 0) {
+            $where[] = [
+                'OR' => [
+                    'users_id_tech'      => $users_id_filter,
+                    'users_id_requester' => $users_id_filter,
+                ],
+            ];
+        }
+
+        $iter = $DB->request([
+            'FROM'  => 'glpi_plugin_appointmentmanager_appointments',
+            'WHERE' => $where,
+            'ORDER' => 'date_start ASC',
+        ]);
+
+        $synced = 0;
+        $failed = 0;
+
+        foreach ($iter as $appt) {
+            foreach ([(int)$appt['users_id_tech'], (int)$appt['users_id_requester']] as $uid) {
+                if ($users_id_filter > 0 && $uid !== $users_id_filter) {
+                    continue;
+                }
+                if ($uid <= 0) {
+                    continue;
+                }
+                try {
+                    self::syncForUser($appt, $uid, 'create');
+                    $synced++;
+                } catch (Throwable $e) {
+                    error_log('[appointmentmanager] backfillSync user=' . $uid . ' appt=' . $appt['id'] . ': ' . $e->getMessage());
+                    $failed++;
+                }
+            }
+        }
+
+        return ['synced' => $synced, 'failed' => $failed];
+    }
+
     // ── Pull: fetch external busy slots for the mini-calendar ─────────────────
 
     static function fetchExternalBusySlots(int $users_id, string $from, string $to, string $from_raw = '', string $to_raw = ''): array {
