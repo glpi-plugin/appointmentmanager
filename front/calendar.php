@@ -88,11 +88,6 @@ if ($is_admin && !empty($techs)) {
     echo '</select></div>';
 }
 
-$btn_hidden = ($is_admin && $selected_tech === 0) ? ' d-none' : '';
-echo '<a id="amNewApptBtn"'
-    . ' href="' . htmlspecialchars($plugin_url . '/front/appointment.php', ENT_QUOTES, 'UTF-8') . '"'
-    . ' class="btn btn-sm btn-primary' . $btn_hidden . '"><i class="ti ti-calendar-plus me-1"></i>'
-    . __('New appointment', 'appointmentmanager') . '</a>';
 echo '</div>';
 
 echo '<div id="am-calendar"></div>';
@@ -147,18 +142,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 window.location.href = apptUrl + "?id=" + info.event.id;
             }
         },
-        dateClick: function(info) {
-            if (techId === 0) return;
-            var clicked = info.date;
-            var evts = calendar.getEvents();
-            for (var i = 0; i < evts.length; i++) {
-                var ev = evts[i];
-                if (ev.display === "background" && ev.start <= clicked && ev.end > clicked) {
-                    return;
-                }
-            }
-            window.location.href = apptUrl + "?date_start=" + encodeURIComponent(info.dateStr);
-        },
         eventContent: function(arg) {
             if (arg.event.display === "background") return;
             var icons = {
@@ -192,8 +175,6 @@ document.addEventListener("DOMContentLoaded", function() {
         techSelect.addEventListener("change", function() {
             techId = parseInt(this.value, 10);
             calendar.refetchEvents();
-            var btn = document.getElementById("amNewApptBtn");
-            if (btn) { btn.classList.toggle("d-none", techId === 0); }
         });
     }
 });
