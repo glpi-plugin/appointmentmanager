@@ -130,6 +130,15 @@ class PluginAppointmentmanagerMicrosoftProvider extends PluginAppointmentmanager
         return $slots;
     }
 
+    public function eventExists(string $access_token, string $event_id): bool {
+        $result = $this->httpRequest('GET', self::EVENTS_URL . '/' . urlencode($event_id),
+            ['Authorization: Bearer ' . $access_token]
+        );
+        if ($result['status'] === 200) { return true; }
+        if ($result['status'] === 404) { return false; }
+        throw new RuntimeException('Microsoft eventExists failed (HTTP ' . $result['status'] . ')');
+    }
+
     private function getRedirectUri(): string {
         global $CFG_GLPI;
         $base = rtrim($CFG_GLPI['url_base'] ?? '', '/');

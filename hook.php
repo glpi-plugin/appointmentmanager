@@ -171,6 +171,13 @@ function plugin_appointmentmanager_install() {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
     }
 
+    CronTask::register('PluginAppointmentmanagerCalendarSync', 'SyncDeletions', HOUR_TIMESTAMP, [
+        'comment'   => 'Cancel GLPI appointments whose external calendar events were deleted',
+        'state'     => CronTask::STATE_WAITING,
+        'mode'      => CronTask::MODE_INTERNAL,
+        'allowmode' => CronTask::MODE_INTERNAL | CronTask::MODE_EXTERNAL,
+    ]);
+
     $migration->executeMigration();
 
     PluginAppointmentmanagerAppointmentType::seedDefaults();

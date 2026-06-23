@@ -248,4 +248,56 @@ class PluginAppointmentmanagerCalendarSync {
             'provider'        => $provider,
         ]);
     }
+
+    // ── Cron: detect events deleted in external calendar ──────────────────────
+
+    static function cronInfo(string $name): array {
+        if ($name === 'SyncDeletions') {
+            return ['description' => __('Cancel appointments deleted from external calendars', 'appointmentmanager')];
+        }
+        return [];
+    }
+
+    static function cronSyncDeletions(\CronTask $task): int {
+        global $DB;
+
+        $active = [
+            PluginAppointmentmanagerAppointment::STATUS_PROPOSED,
+            PluginAppointmentmanagerAppointment::STATUS_CONFIRMED,
+            PluginAppointmentmanagerAppointment::STATUS_RESCHEDULE_REQUESTED,
+        ];
+
+        $iter = $DB->request(['FROM' => 'glpi_plugin_appointmentmanager_external_events']);
+
+        $volume = 0;
+        foreach ($iter as $row) {
+            $appt = PluginAppointmentmanagerAppointment::getById((int)$row['appointments_id']);
+            if (!$appt || !in_array($appt['status'], $active, true)) {
+                continue;
+            }
+            try {
+                $access_token = PluginAppointmentmanagerOAuthProvider::getValidToken((int)$row['users_id'], $row['provider']);
+                if (!$access_token) {
+                    continue;
+                }
+                $instance = PluginAppointmentmanagerOAuthProvider::getProviderInstance($row['provider']);
+                if (!$instance) {
+                    continue;
+                }
+                if (!$instance->eventExists($access_token, $row['external_event_id'])) {
+                    self::deleteExternalEventId((int)$row['appointments_id'], (int)$row['users_id'], $row['provider']);
+                    $DB->update('glpi_plugin_appointmentmanager_appointments', [
+                        'status'   => PluginAppointmentmanagerAppointment::STATUS_CANCELLED,
+                        'date_mod' => date('Y-m-d H:i:s'),
+                    ], ['id' => (int)$row['appointments_id']]);
+                    $task->addVolume(1);
+                    $volume++;
+                }
+            } catch (Throwable $e) {
+                error_log('[appointmentmanager] cronSyncDeletions: ' . $e->getMessage());
+            }
+        }
+
+        return $volume > 0 ? 1 : 0;
+    }
 }

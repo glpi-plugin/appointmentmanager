@@ -10,6 +10,7 @@ abstract class PluginAppointmentmanagerOAuthProvider {
     abstract public function updateEvent(string $access_token, string $event_id, array $event_data): void;
     abstract public function deleteEvent(string $access_token, string $event_id): void;
     abstract public function fetchEvents(string $access_token, string $from, string $to, string $from_raw = '', string $to_raw = ''): array; // [['start'=>...,'end'=>...],...]
+    abstract public function eventExists(string $access_token, string $event_id): bool;
 
     // ── Shared static helpers ─────────────────────────────────────────────────
 
