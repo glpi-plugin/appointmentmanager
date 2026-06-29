@@ -552,6 +552,15 @@ class PluginAppointmentmanagerAppointment extends CommonDBTM {
             . '<span>' . $btn_label . '</span>'
             . '</button>';
 
+        echo '<script>'
+            . 'document.getElementById(' . json_encode($modal_id) . ').addEventListener("hidden.bs.modal", function() {'
+            . '  var ma = document.querySelector("#itil-footer .main-actions");'
+            . '  if (ma) ma.style.display = "";'
+            . '  var ra = document.getElementById("right-actions");'
+            . '  if (ra) ra.style.display = "";'
+            . '});'
+            . '</script>';
+
         echo '<div class="modal fade" id="' . $modal_id . '" tabindex="-1" aria-hidden="true">';
         echo '<div class="modal-dialog modal-xl"><div class="modal-content">';
         echo '<form method="POST" action="' . htmlspecialchars($plugin_url . '/front/appointment.form.php', ENT_QUOTES, 'UTF-8') . '">';
