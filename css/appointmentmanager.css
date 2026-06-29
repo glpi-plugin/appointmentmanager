@@ -1,0 +1,12 @@
+.action-appointment {
+    background-color: #80c9c9;
+    border-color: #80c9c9;
+    color: #1a4a4a;
+}
+
+.action-appointment:hover,
+.action-appointment:focus {
+    background-color: #6ab8b8;
+    border-color: #6ab8b8;
+    color: #1a4a4a;
+}
